@@ -14,6 +14,7 @@ import CheckBox from '@react-native-community/checkbox';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {scale, verticalScale, moderateScale} from 'react-native-size-matters';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Picker } from '@react-native-picker/picker';
 
 export default function Register({navigation}) {
   const [passwordSecured, setPasswordSecured] = useState(true);
@@ -24,6 +25,16 @@ export default function Register({navigation}) {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [referral_code, setReferral_code] = useState('');
+  const [selectedLanguage, setSelectedLanguage] = useState('Studenet');
+
+  const [language] = useState(
+    [
+      'Studenet',
+      'Teacher',
+      'Both',
+    ].sort()
+  );
+  
 
   const _storeData = async token => {
     try {
@@ -167,9 +178,22 @@ export default function Register({navigation}) {
             <Icon name="eye" size={20} color="black" />
           </TouchableOpacity>
         </View>
-        <View style={styles.inputView}>
-          <Icon name="money" size={20} color="black" />
-          <TextInput
+        <View style={styles.dropDown}>
+          {/* <Icon name="money" size={20} color="black" /> */}
+          <Picker
+          selectedValue={selectedLanguage}
+           onValueChange={(itemVal) =>{
+            setSelectedLanguage(itemVal);
+           }}
+           >
+            {
+              language.map((l)=>(
+                  <Picker.Item label={l} value={l} style={{color:'black'}} />
+              ))
+            }
+
+          </Picker>
+          {/* <TextInput
             keyboardType="numeric"
             style={{paddingHorizontal: 12, flex: 1}}
             placeholder="Referral Code (optional)"
@@ -178,8 +202,9 @@ export default function Register({navigation}) {
             value={referral_code}
             placeholderTextColor="#003f5c"
             color="black"
-          />
+          /> */}
         </View>
+        
         <View
           style={{
             justifyContent: 'center',
@@ -273,6 +298,13 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
+    alignSelf: 'center',
+    margin: moderateScale(8),
+  },
+  dropDown: {
+    width: '90%',
+    height: 55,
+    backgroundColor: '#f1f3f6',
     alignSelf: 'center',
     margin: moderateScale(8),
   },

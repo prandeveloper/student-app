@@ -51,6 +51,7 @@ import FullScreen from './screen/FullScreen';
 import PdfRead from './screen/PdfRead';
 import TransactionList from './screen/TransactionList';
 import WithdrawHistor from './screen/WithdrawHistor';
+import Batches from './screen/DrawerScreen/Batches';
 //import Profile from "./src/profile.png";
 
 const Tab = createBottomTabNavigator();
@@ -277,6 +278,11 @@ const TabNavigation = ({navigation}) => {
         options={{headerShown: false}}
       />
       <Stack.Screen
+        name="Batches"
+        component={Batches}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
         name="About"
         component={About}
         options={{headerShown: false}}
@@ -436,7 +442,7 @@ const App = ({navigation}) => {
               <View style={{margin: 10}}>
                 <Icon name="book" color="black" size={20} />
               </View>
-              <TouchableOpacity onPress={() => navigation.navigate('Home')}>
+              <TouchableOpacity onPress={() => navigation.navigate('Batches')}>
                 <Text
                   style={{
                     fontSize: 18,
