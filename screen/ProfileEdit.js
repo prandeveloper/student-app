@@ -13,7 +13,6 @@ import {
 import axios from 'axios';
 import CheckBox from '@react-native-community/checkbox';
 import DatePicker from 'react-native-datepicker';
-import Affiliate from './Affiliate';
 import {useCamera} from 'react-native-camera-hooks';
 import RNFS from 'react-native-fs';
 import {RNCamera} from 'react-native-camera';

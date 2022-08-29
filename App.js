@@ -20,8 +20,6 @@ import {createDrawerNavigator} from '@react-navigation/drawer';
 import ChatScreen from './screen/ChatScreen';
 import Courses from './screen/Courses';
 import AllCourses from './screen/AllCourses';
-import WalletScreen from './screen/WalletScreen';
-import Affiliate from './screen/Affiliate';
 import HomeScreen from './screen/HomeScreen';
 import SplashScreen from './screen/SplashScreen';
 import LogIn from './screen/LogIn';
@@ -34,14 +32,8 @@ import HomeDetails from './screen/HomeDetails';
 import MyCourse from './screen/MyCourse';
 import ProfileEdit from './screen/ProfileEdit';
 import SeeMore from './screen/SeeMore';
-import DepositScreen from './screen/DepositScreen';
 import TermsScreen from './screen/TermsScreen';
-import AddBank from './screen/AddBank';
-import AddNew from './screen/AddNew';
-import SendingMoney from './screen/SendingMoney';
 import UpiIdScreen from './screen/UpiIdScreen';
-import CryptoScreen from './screen/CryptoScreen';
-import Withdraw from './screen/Withdraw';
 import About from './screen/About';
 import Contact from './screen/Contact';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -50,8 +42,9 @@ import NotifyDetail from './screen/NotifyDetail';
 import FullScreen from './screen/FullScreen';
 import PdfRead from './screen/PdfRead';
 import TransactionList from './screen/TransactionList';
-import WithdrawHistor from './screen/WithdrawHistor';
 import Batches from './screen/DrawerScreen/Batches';
+import FavoriteStudent from './screen/DrawerScreen/FavoriteStudent';
+import FavoriteTeacher from './screen/DrawerScreen/FavoriteTeacher';
 //import Profile from "./src/profile.png";
 
 const Tab = createBottomTabNavigator();
@@ -94,11 +87,6 @@ function TabScreen() {
               ? require('./src/settings(1).png')
               : require('./src/settings.png');
           }
-          if (route.name === 'Membership') {
-            iconName = focused
-              ? require('./src/affiliates.png')
-              : require('./src/affiliate.png');
-          }
 
           // You can return any component that you like here!
           return (
@@ -134,11 +122,6 @@ function TabScreen() {
         component={HomeScreen}
         options={{headerShown: false}}
       />
-      {/* <Tab.Screen
-        name="Membership"
-        component={Affiliate}
-        options={{headerShown: false}}
-      /> */}
     </Tab.Navigator>
   );
 }
@@ -225,11 +208,6 @@ const TabNavigation = ({navigation}) => {
         component={SeeMore}
         options={{headerShown: false}}
       />
-      <Stack.Screen
-        name="Deposit"
-        component={DepositScreen}
-        options={{headerShown: false}}
-      />
 
       <Stack.Screen
         name="NotificationsScreen"
@@ -241,37 +219,12 @@ const TabNavigation = ({navigation}) => {
         component={NotifyDetail}
         options={{headerShown: false}}
       />
-
-      <Stack.Screen
-        name="AddBank"
-        component={AddBank}
-        options={{headerShown: false}}
-      />
-      <Stack.Screen
-        name="AddNew"
-        component={AddNew}
-        options={{headerShown: false}}
-      />
-      <Stack.Screen
-        name="SendingMoney"
-        component={SendingMoney}
-        options={{headerShown: false}}
-      />
       <Stack.Screen
         name="UpiIdScreen"
         component={UpiIdScreen}
         options={{headerShown: false}}
       />
-      <Stack.Screen
-        name="CryptoScreen"
-        component={CryptoScreen}
-        options={{headerShown: false}}
-      />
-      <Stack.Screen
-        name="Withdraw"
-        component={Withdraw}
-        options={{headerShown: false}}
-      />
+
       <Stack.Screen
         name="TermsScreen"
         component={TermsScreen}
@@ -280,6 +233,16 @@ const TabNavigation = ({navigation}) => {
       <Stack.Screen
         name="Batches"
         component={Batches}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="FavoriteStudent"
+        component={FavoriteStudent}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="FavoriteTeacher"
+        component={FavoriteTeacher}
         options={{headerShown: false}}
       />
       <Stack.Screen
@@ -298,7 +261,6 @@ const TabNavigation = ({navigation}) => {
 
 const App = ({navigation}) => {
   const [user, setUser] = useState({});
-  const [badge, setBadge] = useState({});
 
   const getUser = async () => {
     axios
@@ -317,30 +279,8 @@ const App = ({navigation}) => {
       });
   };
 
-  // View One Badge == == ==  ==== ==== ======
-
-  const getBadge = async () => {
-    axios
-      .get('http://65.0.80.5:5000/api/user/viewonebatchUser', {
-        headers: {
-          'user-token': await AsyncStorage.getItem('user-token'),
-        },
-      })
-      .then(response => {
-        console.log(response.data.data.lavel_Id.level);
-        const badge = response.data.data;
-        setBadge(badge);
-        //console.log(badge);
-      })
-      .catch(error => {
-        console.log(error.response);
-      });
-  };
   useEffect(() => {
     getUser();
-  }, []);
-  useEffect(() => {
-    getBadge();
   }, []);
 
   const CustomContentContent = ({navigation}) => {
@@ -355,18 +295,6 @@ const App = ({navigation}) => {
               marginBottom: 10,
               height: 200,
             }}>
-            <View style={styles.badge}>
-              <View style={styles.badgeImage}>
-                <Image
-                  source={{uri: `${badge?.lavel_Id?.icon}`}}
-                  style={{width: 30, height: 30, borderRadius: 30}}
-                />
-              </View>
-              <View style={styles.badgeText}>
-                <Text style={styles.levelText}>{badge?.lavel_Id?.level}</Text>
-              </View>
-            </View>
-
             <View style={{alignSelf: 'flex-start'}}>
               {user?.userimg !== '' &&
               user?.userimg !== null &&
@@ -462,7 +390,8 @@ const App = ({navigation}) => {
               <View style={{margin: 10}}>
                 <Icon name="user" color="black" size={20} />
               </View>
-              <TouchableOpacity onPress={() => navigation.navigate('Home')}>
+              <TouchableOpacity
+                onPress={() => navigation.navigate('FavoriteStudent')}>
                 <Text
                   style={{
                     fontSize: 18,
@@ -482,7 +411,8 @@ const App = ({navigation}) => {
               <View style={{margin: 10}}>
                 <Icon name="users" color="black" size={20} />
               </View>
-              <TouchableOpacity onPress={() => navigation.navigate('Home')}>
+              <TouchableOpacity
+                onPress={() => navigation.navigate('FavoriteTeacher')}>
                 <Text
                   style={{
                     fontSize: 18,
@@ -514,26 +444,7 @@ const App = ({navigation}) => {
                 </Text>
               </TouchableOpacity>
             </View> */}
-            {/* <View
-              style={{
-                flexDirection: 'row',
-                borderBottomColor: '#D3D3D3',
-                borderBottomWidth: 1,
-              }}>
-              <View style={{margin: 10}}>
-                <Icon name="list" color="black" size={20} />
-              </View>
-              <TouchableOpacity onPress={() => navigation.navigate('Withdraw')}>
-                <Text
-                  style={{
-                    fontSize: 18,
-                    color: 'black',
-                    margin: 10,
-                  }}>
-                  Withdraw History
-                </Text>
-              </TouchableOpacity>
-            </View> */}
+
             {/* <View
               style={{
                 flexDirection: 'row',
@@ -725,16 +636,6 @@ const App = ({navigation}) => {
           component={TransactionList}
           options={{headerShown: false}}
         />
-        <Drawer.Screen
-          name="Withdraw"
-          component={WithdrawHistor}
-          options={{headerShown: false}}
-        />
-        <Drawer.Screen
-          name="Wallet"
-          component={WalletScreen}
-          options={{headerShown: false}}
-        />
       </Drawer.Navigator>
     </NavigationContainer>
   );
@@ -743,28 +644,6 @@ const App = ({navigation}) => {
 export default App;
 
 const styles = StyleSheet.create({
-  badge: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#800080',
-    marginTop: 10,
-    width: 100,
-    borderRadius: 50,
-    marginLeft: 5,
-    padding: 5,
-    alignSelf: 'flex-end',
-  },
-  badgeImage: {
-    flex: 2,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  badgeText: {
-    flex: 3,
-    justifyContent: 'center',
-    alignItems: 'flex-start',
-  },
   levelText: {
     color: 'white',
     fontSize: 15,
