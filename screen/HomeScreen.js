@@ -27,29 +27,64 @@ export default function HomeScreen({navigation}) {
   const [recent, setRecent] = useState([]);
   const [free, setFree] = useState([]);
   const [category, setCategory] = useState([]);
+  const [banner, setBanner] = useState([]);
 
+  // useEffect(() => {
+  //   // Recent Course
+  //   axiosConfig
+  //     .get('/allcoursebyrecent')
+  //     .then(response => {
+  //       setRecent(response.data.data);
+  //       //console.log(response.data.data);
+  //     })
+  //     .catch(error => {
+  //       console.log(error.response);
+  //     });
+
+  //   // CAtegory List Api
+  //   axiosConfig
+  //     .get('/allCat')
+  //     .then(response => {
+  //       setCategory(response.data.data);
+  //       console.log(response.data.data);
+  //     })
+  //     .catch(error => {
+  //       console.log(error.response);
+  //     });
+  // }, []);
+
+  //Get Banner Api
+
+  const getBanner = () => {
+    axios
+      .get(`https://edumatelive.in/studentadmin/banner-fetch-api.php`)
+      .then(response => {
+        console.log(response.data[0]);
+        const banner = response.data[0];
+        setBanner(banner);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  };
+
+  //Get Course List
+
+  const getCourse = () => {
+    axios
+      .get(`https://edumatelive.in/studentadmin/course-fetch-api.php`)
+      .then(response => {
+        console.log('Course', response.data);
+        const course = response.data;
+        setCourse(course);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  };
   useEffect(() => {
-    // Recent Course
-    axiosConfig
-      .get('/allcoursebyrecent')
-      .then(response => {
-        setRecent(response.data.data);
-        //console.log(response.data.data);
-      })
-      .catch(error => {
-        console.log(error.response);
-      });
-
-    // CAtegory List Api
-    axiosConfig
-      .get('/allCat')
-      .then(response => {
-        setCategory(response.data.data);
-        console.log(response.data.data);
-      })
-      .catch(error => {
-        console.log(error.response);
-      });
+    getBanner();
+    getCourse();
   }, []);
 
   const scrollRef = useRef();
@@ -170,46 +205,60 @@ export default function HomeScreen({navigation}) {
               onTouchStart={onTouchStart}
               onTouchEnd={onTouchEnd}
               pagingEnabled>
-              {carouselImages.map((value, key) => (
-                <Image
-                  source={value.image}
-                  style={{
-                    width: dimension?.width,
-                    height: 180,
-                    resizeMode: 'cover',
-                  }}
-                  PlaceholderContent={<ActivityIndicator />}
-                />
-              ))}
+              <Image
+                source={{uri: `${banner?.benner_first}`}}
+                style={{
+                  width: dimension?.width,
+                  height: 180,
+                  resizeMode: 'cover',
+                }}
+                PlaceholderContent={<ActivityIndicator />}
+              />
+              <Image
+                source={{uri: `${banner?.benner_second}`}}
+                style={{
+                  width: dimension?.width,
+                  height: 180,
+                  resizeMode: 'cover',
+                }}
+                PlaceholderContent={<ActivityIndicator />}
+              />
+              <Image
+                source={{uri: `${banner?.benner_third}`}}
+                style={{
+                  width: dimension?.width,
+                  height: 180,
+                  resizeMode: 'cover',
+                }}
+                PlaceholderContent={<ActivityIndicator />}
+              />
             </ScrollView>
           </View>
           {/* Latest Course Tab Starts From Here */}
           <View>
             <Text style={styles.popular}>Top Courses</Text>
             <ScrollView horizontal={true}>
-              {recent.map(recents => (
-                <View key={recents._id} style={styles.first1}>
+              {course?.map(courses => (
+                <View key={courses.id_c} style={styles.first1}>
                   <TouchableOpacity
                     onPress={() =>
-                      navigation.navigate('Details', {id: recents._id})
+                      navigation.navigate('Details', {id: courses.id_c})
                     }>
                     <View style={styles.second}>
                       <Image
                         style={styles.latestImg}
-                        source={{uri: `${recents.course_image}`}}
+                        source={{uri: `${courses?.images}`}}
                       />
-                      <Text style={styles.coursetitle1}>
-                        {recents.course_title}
-                      </Text>
+                      <Text style={styles.coursetitle1}>{courses?.title}</Text>
                     </View>
                     <View style={styles.teachcat}>
                       <View style={styles.third}>
                         <Image
                           style={{width: 30, height: 30, borderRadius: 50}}
-                          source={{uri: `${recents.teacher?.image}`}}
+                          source={{uri: `${courses?.image}`}}
                         />
                         <Text style={styles.teacherText1}>
-                          {recents.teacher?.fullname}
+                          {courses?.t_name}
                         </Text>
                       </View>
                       {/* <View style={styles.third}>
