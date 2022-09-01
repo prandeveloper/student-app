@@ -171,7 +171,7 @@ export default function ChatScreen({navigation}) {
   return (
     <View style={{flex: 1}}>
       {/* Header */}
-      <NotifyHeader title="CHAT" navigation={navigation} />
+      <NotifyHeader title="SEARCH" navigation={navigation} />
       <ScrollView showsVerticalScrollIndicator={false}>
         {/* Stories */}
         <View style={[styles.storiesView]}>

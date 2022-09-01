@@ -31,35 +31,35 @@ export default function ProfileEdit({navigation}) {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [singleFile, setSingleFile] = useState('');
 
-  const getUser = async () => {
-    axios
-      .get('http://65.0.80.5:5000/api/user/myprofile', {
-        headers: {
-          'user-token': await AsyncStorage.getItem('user-token'),
-        },
-      })
-      .then(response => {
-        const user = response.data.data;
+  // const getUser = async () => {
+  //   axios
+  //     .get('http://65.0.80.5:5000/api/user/myprofile', {
+  //       headers: {
+  //         'user-token': await AsyncStorage.getItem('user-token'),
+  //       },
+  //     })
+  //     .then(response => {
+  //       const user = response.data.data;
 
-        {
-          setFullname(user.fullname);
-          setEmail(user.email);
-          setMobile(JSON.stringify(user.mobile));
-          setPassword(user.password);
-          setConfirmPassword(user.cnfmPassword);
-        }
-        setUser(user);
-        console.log(user);
-        {
-        }
-      })
-      .catch(error => {
-        console.log(error.response);
-      });
-  };
-  useEffect(() => {
-    getUser();
-  }, []);
+  //       {
+  //         setFullname(user.fullname);
+  //         setEmail(user.email);
+  //         setMobile(JSON.stringify(user.mobile));
+  //         setPassword(user.password);
+  //         setConfirmPassword(user.cnfmPassword);
+  //       }
+  //       setUser(user);
+  //       console.log(user);
+  //       {
+  //       }
+  //     })
+  //     .catch(error => {
+  //       console.log(error.response);
+  //     });
+  // };
+  // useEffect(() => {
+  //   getUser();
+  // }, []);
 
   const chooseFrontFile = type => {
     let options = {
@@ -89,37 +89,37 @@ export default function ProfileEdit({navigation}) {
     });
   };
 
-  // <=========== Edit Profile ================>
+  // // <=========== Edit Profile ================>
   function editProfile() {
     handleSubmit();
   }
-  const handleSubmit = async () => {
-    console.log(singleFile.assets[0].base64, fullname, email, mobile, password);
-    const data = new FormData();
-    data.append('fullname', fullname);
-    data.append('email', email);
-    data.append('mobile', mobile);
-    data.append('password', password);
-    data.append('cnfmPassword', confirmPassword);
-    data.append('userimg', singleFile.assets[0].base64);
+  // const handleSubmit = async () => {
+  //   console.log(singleFile.assets[0].base64, fullname, email, mobile, password);
+  //   const data = new FormData();
+  //   data.append('fullname', fullname);
+  //   data.append('email', email);
+  //   data.append('mobile', mobile);
+  //   data.append('password', password);
+  //   data.append('cnfmPassword', confirmPassword);
+  //   data.append('userimg', singleFile.assets[0].base64);
 
-    fetch(`http://65.0.80.5:5000/api/user/edituserbytoken`, {
-      method: 'post',
-      headers: {
-        'Content-Type': 'multipart/form-data',
-        'user-token': await AsyncStorage.getItem('user-token'),
-      },
-      body: data,
-    })
-      .then(response => {
-        response.json().then(res => {
-          console.log(res);
-        });
-      })
-      .catch(error => {
-        console.log(error);
-      });
-  };
+  //   fetch(`http://65.0.80.5:5000/api/user/edituserbytoken`, {
+  //     method: 'post',
+  //     headers: {
+  //       'Content-Type': 'multipart/form-data',
+  //       'user-token': await AsyncStorage.getItem('user-token'),
+  //     },
+  //     body: data,
+  //   })
+  //     .then(response => {
+  //       response.json().then(res => {
+  //         console.log(res);
+  //       });
+  //     })
+  //     .catch(error => {
+  //       console.log(error);
+  //     });
+  // };
   return (
     <View style={styles.container}>
       <CustomHeader title="PROFILE" navigation={navigation} />
@@ -208,6 +208,45 @@ export default function ProfileEdit({navigation}) {
               <Icon name="eye" color="black" size={20} />
             </TouchableOpacity>
           </View>
+          <View style={styles.inputView}>
+            <Icon name="vcard" color="black" size={20} />
+            <TextInput
+              style={{paddingHorizontal: 12, flex: 1}}
+              placeholder="Area"
+              textContentType="Email"
+              onChangeText={setEmail}
+              value={email}
+              placeholderTextColor={'#7A7A81'}
+              color="black"
+              keyboardType="email-address"
+            />
+          </View>
+          <View style={styles.inputView}>
+            <Icon name="vcard" color="black" size={20} />
+            <TextInput
+              style={{paddingHorizontal: 12, flex: 1}}
+              placeholder="State"
+              textContentType="Email"
+              onChangeText={setEmail}
+              value={email}
+              placeholderTextColor={'#7A7A81'}
+              color="black"
+              keyboardType="email-address"
+            />
+          </View>
+          <View style={styles.inputView}>
+            <Icon name="vcard" color="black" size={20} />
+            <TextInput
+              style={{paddingHorizontal: 12, flex: 1}}
+              placeholder="City"
+              textContentType="Email"
+              onChangeText={setEmail}
+              value={email}
+              placeholderTextColor={'#7A7A81'}
+              color="black"
+              keyboardType="email-address"
+            />
+          </View>
           <View style={styles.imagetext}>
             <Text style={styles.textimage}>Upload Image</Text>
           </View>
@@ -231,7 +270,7 @@ export default function ProfileEdit({navigation}) {
               </View>
             )}
           </View>
-          <TouchableOpacity style={styles.logbut} onPress={editProfile}>
+          <TouchableOpacity style={styles.logbut} >
             <Text style={{fontSize: 20, fontWeight: 'bold', color: 'white'}}>
               Update
             </Text>

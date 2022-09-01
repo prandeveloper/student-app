@@ -11,55 +11,21 @@ import {
   ScrollView,
 } from 'react-native';
 import DatePicker from 'react-native-datepicker';
-import {ListItem, Avatar} from 'react-native-elements';
 import CustomHeader from '../header/CustomHeader';
 
-export default function Batches({navigation}) {
+export default function BatchesForm({navigation}) {
   const [date, setDate] = useState('');
   const [endTime, setEndTime] = useState('');
   const [time, setTime] = useState('');
   const [selectedLanguage, setSelectedLanguage] = useState('');
-  const list = [
-    {
-      name: 'Chris Jackson',
-      avatar_url:
-        'https://png.pngtree.com/png-clipart/20190924/original/pngtree-business-people-avatar-icon-user-profile-free-vector-png-image_4815126.jpg',
-      subtitle: 'Student',
-    },
-    {
-      name: 'Amy Farha',
-      avatar_url:
-        'https://www.shareicon.net/data/512x512/2016/09/15/829452_user_512x512.png',
-      subtitle: 'Student',
-    },
-    {
-      name: 'Chris Jackson',
-      avatar_url:
-        'https://png.pngtree.com/png-clipart/20190924/original/pngtree-business-people-avatar-icon-user-profile-free-vector-png-image_4815126.jpg',
-      subtitle: 'Student',
-    },
-  ];
   return (
     <SafeAreaView>
       <View>
         <CustomHeader title="Batches" navigation={navigation} />
       </View>
-      <View >
-          {list.map((l, i) => (
-            <TouchableOpacity  >
-              <ListItem key={i} bottomDivider style={{marginBottom:10}}>
-              <Avatar source={{uri: l.avatar_url}} />
-              <ListItem.Content>
-                <ListItem.Title>{l.name}</ListItem.Title>
-                <ListItem.Subtitle>{l.subtitle}</ListItem.Subtitle>
-              </ListItem.Content>
-            </ListItem>
-            </TouchableOpacity>
-          ))}
-        </View>
       <ScrollView>
         <View style={styles.mainContainer}>
-          {/* <View style={styles.date}>
+          <View style={styles.date}>
             <View style={styles.startText}>
               <Text style={styles.dateText}>START DATE</Text>
             </View>
@@ -164,9 +130,9 @@ export default function Batches({navigation}) {
                 <Picker.Item label="Hindi" value="hindi" />
               </Picker>
             </View>
-          </View> */}
+          </View>
           <View style={styles.buttonView}>
-            <TouchableOpacity style={styles.buttonTouch} onPress={()=> navigation.navigate('BatchesForm')}>
+            <TouchableOpacity style={styles.buttonTouch}>
               <Text style={styles.buttonText}>ADD BATCH</Text>
             </TouchableOpacity>
           </View>

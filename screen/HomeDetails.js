@@ -144,7 +144,7 @@ export default function HomeDetails({route, navigation}) {
           <Text style={styles.courseDesc}>{detail.desc}</Text>
           <TouchableOpacity style={styles.enrollBtn}>
             <Button
-              title="Enroll Now"
+              title="ADD TO FAVORITE"
               color="black"
               style={styles.enrollText}
               onPress={enrollNow}

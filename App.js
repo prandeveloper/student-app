@@ -45,6 +45,8 @@ import TransactionList from './screen/TransactionList';
 import Batches from './screen/DrawerScreen/Batches';
 import FavoriteStudent from './screen/DrawerScreen/FavoriteStudent';
 import FavoriteTeacher from './screen/DrawerScreen/FavoriteTeacher';
+import BatchesForm from './screen/DrawerScreen/BatchesForm';
+import SearchScreen from './screen/SearchScreen';
 //import Profile from "./src/profile.png";
 
 const Tab = createBottomTabNavigator();
@@ -109,7 +111,7 @@ function TabScreen() {
 
       <Tab.Screen
         name="Search"
-        component={ChatScreen}
+        component={SearchScreen}
         options={{headerShown: false}}
       />
       <Tab.Screen
@@ -119,7 +121,7 @@ function TabScreen() {
       />
       <Tab.Screen
         name="Setting"
-        component={HomeScreen}
+        component={ProfileEdit}
         options={{headerShown: false}}
       />
     </Tab.Navigator>
@@ -233,6 +235,11 @@ const TabNavigation = ({navigation}) => {
       <Stack.Screen
         name="Batches"
         component={Batches}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="BatchesForm"
+        component={BatchesForm}
         options={{headerShown: false}}
       />
       <Stack.Screen

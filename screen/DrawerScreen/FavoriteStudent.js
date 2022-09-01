@@ -1,4 +1,4 @@
-import {SafeAreaView, StyleSheet, Text, View} from 'react-native';
+import {SafeAreaView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React from 'react';
 import {ListItem, Avatar} from 'react-native-elements';
 import CustomHeader from '../header/CustomHeader';
@@ -25,20 +25,22 @@ const FavoriteStudent = ({navigation}) => {
     },
   ];
   return (
-    <SafeAreaView>
+    <SafeAreaView >
       <View>
         <CustomHeader title="FAVORITE STUDENT" navigation={navigation} />
       </View>
       <View>
-        <View>
+        <View >
           {list.map((l, i) => (
-            <ListItem key={i} bottomDivider>
+            <TouchableOpacity>
+              <ListItem key={i} bottomDivider style={{marginBottom:10}}>
               <Avatar source={{uri: l.avatar_url}} />
               <ListItem.Content>
                 <ListItem.Title>{l.name}</ListItem.Title>
                 <ListItem.Subtitle>{l.subtitle}</ListItem.Subtitle>
               </ListItem.Content>
             </ListItem>
+            </TouchableOpacity>
           ))}
         </View>
       </View>
