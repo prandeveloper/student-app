@@ -57,11 +57,12 @@ export default function HomeScreen({navigation}) {
 
   const getBanner = () => {
     axios
-      .get(`https://edumatelive.in/studentadmin/banner-fetch-api.php`)
+      .get(`https://nifty50algo.in/newadmin/api/ApiCommonController/coursesbanner`)
       .then(response => {
-        console.log(response.data[0]);
-        const banner = response.data[0];
+        // console.log(response.data[0]);
+        const banner = response.data.data[0];
         setBanner(banner);
+        console.log(",,,,,,,,,",banner);
       })
       .catch(error => {
         console.log(error);
@@ -206,7 +207,7 @@ export default function HomeScreen({navigation}) {
               onTouchEnd={onTouchEnd}
               pagingEnabled>
               <Image
-                source={{uri: `${banner?.benner_first}`}}
+                source={{uri: `${banner?.poster_image}`}}
                 style={{
                   width: dimension?.width,
                   height: 180,
@@ -215,7 +216,7 @@ export default function HomeScreen({navigation}) {
                 PlaceholderContent={<ActivityIndicator />}
               />
               <Image
-                source={{uri: `${banner?.benner_second}`}}
+                source={{uri: `${banner?.poster_image}`}}
                 style={{
                   width: dimension?.width,
                   height: 180,
@@ -224,7 +225,7 @@ export default function HomeScreen({navigation}) {
                 PlaceholderContent={<ActivityIndicator />}
               />
               <Image
-                source={{uri: `${banner?.benner_third}`}}
+                source={{uri: `${banner?.poster_image}`}}
                 style={{
                   width: dimension?.width,
                   height: 180,

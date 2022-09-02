@@ -19,13 +19,13 @@ import { Picker } from '@react-native-picker/picker';
 export default function Register({navigation}) {
   const [passwordSecured, setPasswordSecured] = useState(true);
   const [toggleCheckBox, setToggleCheckBox] = useState(false);
-  const [fullname, setFullname] = useState('');
+  const [s_name, setS_name] = useState('');
   const [email, setEmail] = useState('');
-  const [mobile, setMobile] = useState('');
+  const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [referral_code, setReferral_code] = useState('');
-  const [selectedLanguage, setSelectedLanguage] = useState('Studenet');
+  const [cpassword, setCpassword] = useState('');
+  // const [referral_code, setReferral_code] = useState('');
+  const [users, setUsers] = useState('');
 
   const [language] = useState(
     [
@@ -36,48 +36,48 @@ export default function Register({navigation}) {
   );
   
 
-  const _storeData = async token => {
+  const _storeData = async data => {
     try {
-      await AsyncStorage.setItem('user-token', token);
+      await AsyncStorage.setItem('user_id', data);
       console.log('token saved success');
     } catch (error) {
       console.log('Some error in setting token');
     }
   };
   const signUp = (
-    fullname,
+    s_name,
     email,
-    mobile,
+    phone,
     password,
-    confirmPassword,
-    referral_code,
+    cpassword,
+    users,
   ) => {
     console.log(
-      fullname,
+      s_name,
       email,
-      mobile,
+      phone,
       password,
-      confirmPassword,
-      referral_code,
+      cpassword,
+      users,
     );
     axios
-      .post(`http://65.0.80.5:5000/api/user/signup`, {
-        fullname: fullname,
+      .post(`https://nifty50algo.in/newadmin//api/ApiCommonController/userRegister`, {
+        s_name: s_name,
         email: email,
-        mobile: mobile,
+        phone: phone,
         password: password,
-        confirmPassword: confirmPassword,
-        referral_code: referral_code,
+        cpassword: cpassword,
+        users:users,
       })
       .then(function (response) {
         console.log(response.data);
-        if (response.data.msg === 'success' || response.data.msg == 'success') {
+        if (response.data.message === 'success' || response.data.message == 'success') {
           ToastAndroid.show('Register Successfull....', ToastAndroid.SHORT);
         }
         console.log(response.data.token);
 
-        if (response.data.token != null) {
-          _storeData(response.data.token);
+        if (response.data.data != null) {
+          _storeData(response.data.data);
           navigation.navigate('Home');
         } else {
           console.log('no token!');
@@ -107,8 +107,8 @@ export default function Register({navigation}) {
             style={{paddingHorizontal: 12, flex: 1}}
             placeholder="Full Name"
             textContentType="name"
-            onChangeText={setFullname}
-            value={fullname}
+            onChangeText={setS_name}
+            value={s_name}
             placeholderTextColor="#003f5c"
             color="black"
           />
@@ -130,10 +130,10 @@ export default function Register({navigation}) {
           <TextInput
             keyboardType="numeric"
             style={{paddingHorizontal: 12, flex: 1}}
-            placeholder="Mobile No."
+            placeholder="phone No."
             textContentType="telephoneNumber"
-            onChangeText={setMobile}
-            value={mobile}
+            onChangeText={setPhone}
+            value={phone}
             placeholderTextColor="#003f5c"
             color="black"
           />
@@ -165,8 +165,8 @@ export default function Register({navigation}) {
             placeholder={'confirm password'}
             secureTextEntry={passwordSecured}
             textContentType="password"
-            onChangeText={setConfirmPassword}
-            value={confirmPassword}
+            onChangeText={setCpassword}
+            value={cpassword}
             placeholderTextColor="#003f5c"
             color="black"
           />
@@ -181,9 +181,9 @@ export default function Register({navigation}) {
         <View style={styles.dropDown}>
           {/* <Icon name="money" size={20} color="black" /> */}
           <Picker
-          selectedValue={selectedLanguage}
+          selectedValue={users}
            onValueChange={(itemVal) =>{
-            setSelectedLanguage(itemVal);
+            setUsers(itemVal);
            }}
            >
             {
@@ -236,17 +236,17 @@ export default function Register({navigation}) {
             </Text>
           </View>
         </View>
-        {fullname && email && mobile && password && confirmPassword ? (
+        {s_name && email && phone && password && cpassword && users? (
           <TouchableOpacity
             style={styles.logbut}
             onPress={() => {
               signUp(
-                fullname,
+                s_name,
                 email,
-                mobile,
+                phone,
                 password,
-                confirmPassword,
-                referral_code,
+                cpassword,
+                users,
               );
             }}>
             <Text style={{fontSize: 20, fontWeight: 'bold', color: 'white'}}>

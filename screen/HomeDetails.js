@@ -168,7 +168,7 @@ export default function HomeDetails({route, navigation}) {
           </Text>
         </View>
 
-        <View>
+        {/* <View>
           <Text style={styles.popular}>Comments</Text>
           {coment?.slice(0, 3).map(list => (
             <View key={list?._id}>
@@ -179,15 +179,15 @@ export default function HomeDetails({route, navigation}) {
               <Text style={styles.comment}>{list.comment}</Text>
             </View>
           ))}
-        </View>
+        </View> */}
         {/* See More Button */}
-        <View style={styles.seeView}>
+        {/* <View style={styles.seeView}>
           <TouchableOpacity
             onPress={() => navigation.navigate('SeeMore', {id: detail._id})}
             style={styles.seeButton}>
             <Text style={styles.seeText}>SEE MORE</Text>
           </TouchableOpacity>
-        </View>
+        </View> */}
       </ScrollView>
     </SafeAreaView>
   );

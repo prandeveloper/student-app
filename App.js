@@ -596,7 +596,7 @@ const App = ({navigation}) => {
                   });
                   // navigation.replace('Login');
                   console.log('>>>>>>>>>>>');
-                  await AsyncStorage.removeItem('user-token');
+                  await AsyncStorage.removeItem('user_id');
                 }}>
                 <Text
                   style={{

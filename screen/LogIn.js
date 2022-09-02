@@ -28,22 +28,22 @@ export default function LogIn({navigation}) {
     ToastAndroid.show('Wrong Email or Password', ToastAndroid.SHORT);
   }
 
-  const _storeData = async token => {
+  const _storeData = async id => {
     try {
-      await AsyncStorage.setItem('user-token', token);
-      console.log('Token Saved');
+      await AsyncStorage.setItem('user_id', id);
+      console.log('id Saved');
     } catch (error) {
-      console.log('Some error in setting token');
+      console.log('Some error in setting id');
     }
   };
 
   const getData = async () => {
     try {
-      const token = await AsyncStorage.getItem('staff-token');
-      if (token !== null) {
+      const id = await AsyncStorage.getItem('user_id');
+      if (id !== null) {
         console.log('success');
-        console.log(token);
-        setStoreddata(token);
+        console.log(id);
+        setStoreddata(id);
         navigation.replace('Home');
       }
     } catch (e) {
@@ -56,31 +56,31 @@ export default function LogIn({navigation}) {
   const signIn = (email, password) => {
     console.log(email, password);
     axios
-      .post(`http://65.0.80.5:5000/api/user/login`, {
+      .post(`https://nifty50algo.in/newadmin//api/ApiCommonController/user_loginbyotp`, {
         email: email,
         password: password,
       })
       .then(function (response) {
         console.log(response.data);
-        console.log(response.data.msg);
-        if (response.data.msg === 'success' || response.data.msg == 'success') {
+        console.log(response.data.message);
+        if (response.data.message === 'success' || response.data.message == 'success') {
           ToastAndroid.show('Login Successfull....', ToastAndroid.SHORT);
         }
 
-        console.log(response.data.token);
+        console.log(response.data.data.id);
 
-        if (response.data.token != null) {
-          _storeData(response.data.token);
+        if (response.data.data.id != null) {
+          _storeData(response.data.data.id);
           navigation.replace('Home');
         } else {
-          console.log('no token!');
+          console.log('no id!');
         }
       })
       .catch(function (error) {
         console.log(error.response.data);
         if (
-          error.response.data.msg == 'User Doesnot Exist' ||
-          error.response.data.msg === 'User Doesnot Exist'
+          error.response.data.message == 'User Doesnot Exist' ||
+          error.response.data.message === 'User Doesnot Exist'
         ) {
           showToast();
         }
