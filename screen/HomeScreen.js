@@ -60,7 +60,7 @@ export default function HomeScreen({navigation}) {
       .get(`https://nifty50algo.in/newadmin/api/ApiCommonController/coursesbanner`)
       .then(response => {
         // console.log(response.data[0]);
-        const banner = response.data.data[0];
+        const banner = response.data.data;
         setBanner(banner);
         console.log(",,,,,,,,,",banner);
       })
@@ -73,10 +73,10 @@ export default function HomeScreen({navigation}) {
 
   const getCourse = () => {
     axios
-      .get(`https://edumatelive.in/studentadmin/course-fetch-api.php`)
+      .get(`https://nifty50algo.in/newadmin//api/ApiCommonController/courses`)
       .then(response => {
-        console.log('Course', response.data);
-        const course = response.data;
+        console.log('Course', response.data.data);
+        const course = response.data.data;
         setCourse(course);
       })
       .catch(error => {
@@ -84,7 +84,6 @@ export default function HomeScreen({navigation}) {
       });
   };
   useEffect(() => {
-    getBanner();
     getCourse();
   }, []);
 
@@ -248,7 +247,7 @@ export default function HomeScreen({navigation}) {
                     <View style={styles.second}>
                       <Image
                         style={styles.latestImg}
-                        source={{uri: `${courses?.images}`}}
+                        source={{uri: `${courses?.poster_image}`}}
                       />
                       <Text style={styles.coursetitle1}>{courses?.title}</Text>
                     </View>
@@ -256,12 +255,13 @@ export default function HomeScreen({navigation}) {
                       <View style={styles.third}>
                         <Image
                           style={{width: 30, height: 30, borderRadius: 50}}
-                          source={{uri: `${courses?.image}`}}
+                          source={{uri: `${courses?.poster_image}`}}
                         />
                         <Text style={styles.teacherText1}>
-                          {courses?.t_name}
+                          {courses?.title}
                         </Text>
                       </View>
+
                       {/* <View style={styles.third}>
                         <Text style={styles.teacherText}>
                           {recents.category_id?.catName}

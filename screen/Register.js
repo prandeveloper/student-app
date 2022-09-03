@@ -36,9 +36,9 @@ export default function Register({navigation}) {
   );
   
 
-  const _storeData = async data => {
+  const _storeData = async id => {
     try {
-      await AsyncStorage.setItem('user_id', data);
+      await AsyncStorage.setItem('user_id', JSON.stringify(id));
       console.log('token saved success');
     } catch (error) {
       console.log('Some error in setting token');
@@ -70,14 +70,14 @@ export default function Register({navigation}) {
         users:users,
       })
       .then(function (response) {
-        console.log(response.data);
+        console.log('///////////',response.data.data.users);
         if (response.data.message === 'success' || response.data.message == 'success') {
           ToastAndroid.show('Register Successfull....', ToastAndroid.SHORT);
         }
-        console.log(response.data.token);
+        console.log(response.data.data);
 
-        if (response.data.data != null) {
-          _storeData(response.data.data);
+        if (response.data.data.id != null) {
+          _storeData(response.data.data.id);
           navigation.navigate('Home');
         } else {
           console.log('no token!');
@@ -236,7 +236,7 @@ export default function Register({navigation}) {
             </Text>
           </View>
         </View>
-        {s_name && email && phone && password && cpassword && users? (
+        {s_name && email && phone && password && cpassword && users ? (
           <TouchableOpacity
             style={styles.logbut}
             onPress={() => {

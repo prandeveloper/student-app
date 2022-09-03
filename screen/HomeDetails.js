@@ -27,10 +27,10 @@ export default function HomeDetails({route, navigation}) {
   // <=============== Course Detail =======>
   const getDetail = async () => {
     axiosConfig
-      .get(`/viewonecoursep/${id}`)
+      .get(`https://nifty50algo.in/newadmin//api/ApiCommonController/courseviewone/${id}`)
       .then(response => {
-        setDetail(response.data.data);
-        console.log(response.data.data);
+        setDetail(response.data.data[0]);
+        console.log("aaaaaaaaaaaaa",response.data.data);
       })
       .catch(error => {
         console.log(error.response);
@@ -134,12 +134,12 @@ export default function HomeDetails({route, navigation}) {
           <TouchableOpacity>
             <Image
               style={styles.courseImage}
-              source={{uri: `${detail.posterimg}`}}
+              source={{uri: `${detail.poster_image}`}}
             />
           </TouchableOpacity>
         </View>
         <View style={{flex: 2}}>
-          <Text style={styles.courseTitle}>{detail.course_title}</Text>
+          <Text style={styles.courseTitle}>{detail.title}</Text>
 
           <Text style={styles.courseDesc}>{detail.desc}</Text>
           <TouchableOpacity style={styles.enrollBtn}>
