@@ -26,7 +26,7 @@ export default function SearchScreen({ navigation }) {
             name: 'Chris Jackson',
             avatar_url:
                 'https://png.pngtree.com/png-clipart/20190924/original/pngtree-business-people-avatar-icon-user-profile-free-vector-png-image_4815126.jpg',
-            subtitle: 'Student',
+            subtitle: 'Both',
         },
         {
             name: 'Amy Farha',
@@ -38,18 +38,33 @@ export default function SearchScreen({ navigation }) {
             name: 'Chris Jackson',
             avatar_url:
                 'https://png.pngtree.com/png-clipart/20190924/original/pngtree-business-people-avatar-icon-user-profile-free-vector-png-image_4815126.jpg',
-            subtitle: 'Student',
+            subtitle: 'Teacher',
         },
     ];
 
+
+    const search = async () => {
+        const url = `https://edumatelive.in/studentadmin/api-search-student.php`;
+        const response = await axios.post(url);
+        console.log(response.data);
+      };
+    // const search = async () =>{
+    //     const data = {
+    //         method: 'post',
+    //         url: `https://edumatelive.in/studentadmin/api-search-student.php`,
+    //       };
+    //       const response = await axios(data);
+    //       console.log(response.data);
+    //     };
+    // }
     return (
         <View style={{ flex: 1 }}>
             {/* Header */}
             <NotifyHeader title="SEARCH" navigation={navigation} />
             <Searchbar
                 placeholder="Search"
-                onChangeText={onChangeSearch}
-                value={searchQuery}
+                value={search}
+            onChangeText={search => this.setState({search})}
             />
             <View >
                 {list.map((l, i) => (

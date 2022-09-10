@@ -30,7 +30,7 @@ export default function AllCourses({navigation}) {
   // All Courses
   const getAllCourse = async () => {
     axiosConfig
-      .get(`/allcourse`)
+      .get(`/api/ApiCommonController/courselist`)
       .then(response => {
         setCourse(response.data.data);
         console.log(response.data.data);
@@ -48,33 +48,33 @@ export default function AllCourses({navigation}) {
       <NotifyHeader title="ALL COURSE" navigation={navigation} />
       <ScrollView>
         {course.map(courses => (
-          <View key={courses._id} style={styles.mainView}>
+          <View key={courses.id_c} style={styles.mainView}>
             <TouchableOpacity
               onPress={() =>
                 navigation.navigate('Details', {
-                  id: courses?._id,
+                  id: courses?.id_c,
                 })
               }>
               <Image
                 style={{width: 150, height: 100, margin: 10, borderRadius: 5}}
-                source={{uri: `${courses?.course_image}`}}
+                source={{uri: `${courses?.images}`}}
               />
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() =>
                 navigation.navigate('Details', {
-                  id: courses?._id,
+                  id: courses?.id_c,
                 })
               }>
-              <Text style={styles.courseTitle}>{courses?.course_title}</Text>
+              <Text style={styles.courseTitle}>{courses?.title}</Text>
 
               <View style={styles.teacherView}>
                 <Image
                   style={{width: 30, height: 30, borderRadius: 30}}
-                  source={{uri: `${courses?.teacher?.image}`}}
+                  source={{uri: `${courses?.images}`}}
                 />
                 <Text style={{margin: 10, color: 'black', fontWeight: 'bold'}}>
-                  {courses.teacher?.fullname}
+                  {courses?.teacher_name}
                 </Text>
               </View>
             </TouchableOpacity>

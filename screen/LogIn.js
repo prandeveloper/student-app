@@ -39,11 +39,11 @@ export default function LogIn({navigation}) {
 
   const getData = async () => {
     try {
-      const id = await AsyncStorage.getItem('user_id');
-      if (id !== null) {
+      const user_id = await AsyncStorage.getItem('user_id');
+      if (user_id !== null) {
         console.log('success');
-        console.log(id);
-        setStoreddata(id);
+        console.log(user_id);
+        setStoreddata(user_id);
         navigation.replace('Home');
       }
     } catch (e) {
@@ -56,7 +56,7 @@ export default function LogIn({navigation}) {
   const signIn = (email, password) => {
     console.log(email, password);
     axios
-      .post(`https://nifty50algo.in/newadmin//api/ApiCommonController/user_loginbyotp`, {
+      .post(`https://edumatelive.in/studentadmin/newadmin/api/ApiCommonController/user_loginbypassword`, {
         email: email,
         password: password,
       })

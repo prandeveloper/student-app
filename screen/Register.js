@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -9,14 +9,14 @@ import {
   ToastAndroid,
 } from 'react-native';
 import axios from 'axios';
-import {ScrollView} from 'react-native-gesture-handler';
+import { ScrollView } from 'react-native-gesture-handler';
 import CheckBox from '@react-native-community/checkbox';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import {scale, verticalScale, moderateScale} from 'react-native-size-matters';
+import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Picker } from '@react-native-picker/picker';
 
-export default function Register({navigation}) {
+export default function Register({ navigation }) {
   const [passwordSecured, setPasswordSecured] = useState(true);
   const [toggleCheckBox, setToggleCheckBox] = useState(false);
   const [s_name, setS_name] = useState('');
@@ -24,6 +24,8 @@ export default function Register({navigation}) {
   const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
   const [cpassword, setCpassword] = useState('');
+  const [storeddata, setStoreddata] = useState('');
+
   // const [referral_code, setReferral_code] = useState('');
   const [users, setUsers] = useState('');
 
@@ -34,7 +36,7 @@ export default function Register({navigation}) {
       'Both',
     ].sort()
   );
-  
+
 
   const _storeData = async id => {
     try {
@@ -44,6 +46,22 @@ export default function Register({navigation}) {
       console.log('Some error in setting token');
     }
   };
+  const getData = async () => {
+    try {
+      const user_id = await AsyncStorage.getItem('user_id');
+      if (user_id !== null) {
+        console.log('success');
+        console.log(user_id);
+        setStoreddata(user_id);
+        navigation.replace('Home');
+      }
+    } catch (e) {
+      console.log('no Value in login');
+    }
+  };
+  useEffect(() => {
+    getData();
+  }, [storeddata]);
   const signUp = (
     s_name,
     email,
@@ -61,16 +79,16 @@ export default function Register({navigation}) {
       users,
     );
     axios
-      .post(`https://nifty50algo.in/newadmin//api/ApiCommonController/userRegister`, {
+      .post(`https://edumatelive.in/studentadmin/newadmin//api/ApiCommonController/userRegister`, {
         s_name: s_name,
         email: email,
         phone: phone,
         password: password,
         cpassword: cpassword,
-        users:users,
+        users: users,
       })
       .then(function (response) {
-        console.log('///////////',response.data.data.users);
+        console.log('///////////', response.data.data.users);
         if (response.data.message === 'success' || response.data.message == 'success') {
           ToastAndroid.show('Register Successfull....', ToastAndroid.SHORT);
         }
@@ -96,7 +114,7 @@ export default function Register({navigation}) {
           alignSelf: 'center',
           height: verticalScale(80),
         }}>
-        <Text style={{fontSize: 30, fontWeight: 'bold', color: 'black'}}>
+        <Text style={{ fontSize: 30, fontWeight: 'bold', color: 'black' }}>
           Create an account
         </Text>
       </View>
@@ -104,7 +122,7 @@ export default function Register({navigation}) {
         <View style={styles.inputView}>
           <Icon name="user" size={20} color="black" />
           <TextInput
-            style={{paddingHorizontal: 12, flex: 1}}
+            style={{ paddingHorizontal: 12, flex: 1 }}
             placeholder="Full Name"
             textContentType="name"
             onChangeText={setS_name}
@@ -116,7 +134,7 @@ export default function Register({navigation}) {
         <View style={styles.inputView}>
           <Icon name="envelope" size={20} color="black" />
           <TextInput
-            style={{paddingHorizontal: 12, flex: 1}}
+            style={{ paddingHorizontal: 12, flex: 1 }}
             placeholder="Email"
             textContentType="emailAddress"
             onChangeText={setEmail}
@@ -129,7 +147,7 @@ export default function Register({navigation}) {
           <Icon name="phone" size={20} color="black" />
           <TextInput
             keyboardType="numeric"
-            style={{paddingHorizontal: 12, flex: 1}}
+            style={{ paddingHorizontal: 12, flex: 1 }}
             placeholder="phone No."
             textContentType="telephoneNumber"
             onChangeText={setPhone}
@@ -141,7 +159,7 @@ export default function Register({navigation}) {
         <View style={styles.inputView}>
           <Icon name="lock" size={20} color="black" />
           <TextInput
-            style={{flex: 1, paddingHorizontal: 12}}
+            style={{ flex: 1, paddingHorizontal: 12 }}
             placeholder={'password'}
             secureTextEntry={passwordSecured}
             textContentType="password"
@@ -151,7 +169,7 @@ export default function Register({navigation}) {
             color="black"
           />
           <TouchableOpacity
-            style={{padding: 4}}
+            style={{ padding: 4 }}
             onPress={() => {
               setPasswordSecured(!passwordSecured);
             }}>
@@ -161,7 +179,7 @@ export default function Register({navigation}) {
         <View style={styles.inputView}>
           <Icon name="lock" size={20} color="black" />
           <TextInput
-            style={{flex: 1, paddingHorizontal: 12}}
+            style={{ flex: 1, paddingHorizontal: 12 }}
             placeholder={'confirm password'}
             secureTextEntry={passwordSecured}
             textContentType="password"
@@ -171,7 +189,7 @@ export default function Register({navigation}) {
             color="black"
           />
           <TouchableOpacity
-            style={{padding: 4}}
+            style={{ padding: 4 }}
             onPress={() => {
               setPasswordSecured(!passwordSecured);
             }}>
@@ -181,14 +199,14 @@ export default function Register({navigation}) {
         <View style={styles.dropDown}>
           {/* <Icon name="money" size={20} color="black" /> */}
           <Picker
-          selectedValue={users}
-           onValueChange={(itemVal) =>{
-            setUsers(itemVal);
-           }}
-           >
+            selectedValue={users}
+            onValueChange={(itemVal) => {
+              setUsers(itemVal);
+            }}
+          >
             {
-              language.map((l)=>(
-                  <Picker.Item label={l} value={l} style={{color:'black'}} />
+              language.map((l) => (
+                <Picker.Item label={l} value={l} style={{ color: 'black' }} />
               ))
             }
 
@@ -204,7 +222,7 @@ export default function Register({navigation}) {
             color="black"
           /> */}
         </View>
-        
+
         <View
           style={{
             justifyContent: 'center',
@@ -219,18 +237,18 @@ export default function Register({navigation}) {
               disabled={false}
               value={toggleCheckBox}
               onValueChange={newValue => setToggleCheckBox(newValue)}
-              tintColors={{true: '#F15927', false: 'black'}}
+              tintColors={{ true: '#F15927', false: 'black' }}
             />
           </View>
           <View
-            style={{justifyContent: 'center', alignSelf: 'center', width: 250}}>
-            <Text style={{color: '#7A7A81'}}>
+            style={{ justifyContent: 'center', alignSelf: 'center', width: 250 }}>
+            <Text style={{ color: '#7A7A81' }}>
               By Using our services you are agreeing to our
-              <Text style={{color: 'black', fontWeight: 'bold'}}>
+              <Text style={{ color: 'black', fontWeight: 'bold' }}>
                 Terms
               </Text>{' '}
               and{' '}
-              <Text style={{color: 'black', fontWeight: 'bold'}}>
+              <Text style={{ color: 'black', fontWeight: 'bold' }}>
                 Privacy Statement
               </Text>{' '}
             </Text>
@@ -249,13 +267,13 @@ export default function Register({navigation}) {
                 users,
               );
             }}>
-            <Text style={{fontSize: 20, fontWeight: 'bold', color: 'white'}}>
+            <Text style={{ fontSize: 20, fontWeight: 'bold', color: 'white' }}>
               Create account
             </Text>
           </TouchableOpacity>
         ) : (
           <TouchableOpacity style={styles.logbut}>
-            <Text style={{fontSize: 16, fontWeight: 'bold', color: 'white'}}>
+            <Text style={{ fontSize: 16, fontWeight: 'bold', color: 'white' }}>
               Please Enter Details
             </Text>
           </TouchableOpacity>
@@ -268,11 +286,11 @@ export default function Register({navigation}) {
               alignSelf: 'center',
               marginTop: moderateScale(30),
             }}
-            onPress={() => navigation.navigate('Login', {name: 'Login'})}>
-            <Text style={{margin: 8, color: 'black'}}>
+            onPress={() => navigation.navigate('Login', { name: 'Login' })}>
+            <Text style={{ margin: 8, color: 'black' }}>
               Already Have An Account?
             </Text>
-            <Text style={{color: 'red', fontWeight: 'bold', fontSize: 15}}>
+            <Text style={{ color: 'red', fontWeight: 'bold', fontSize: 15 }}>
               Sign In
             </Text>
           </TouchableOpacity>
@@ -281,7 +299,7 @@ export default function Register({navigation}) {
     </ScrollView>
   );
 }
-const Login = ({navigation, route}) => {
+const Login = ({ navigation, route }) => {
   return;
 };
 

@@ -47,6 +47,8 @@ import FavoriteStudent from './screen/DrawerScreen/FavoriteStudent';
 import FavoriteTeacher from './screen/DrawerScreen/FavoriteTeacher';
 import BatchesForm from './screen/DrawerScreen/BatchesForm';
 import SearchScreen from './screen/SearchScreen';
+import TeacherDetails from './screen/TeacherDetails';
+import StudentDetails from './screen/StudentDetails';
 //import Profile from "./src/profile.png";
 
 const Tab = createBottomTabNavigator();
@@ -260,6 +262,16 @@ const TabNavigation = ({navigation}) => {
       <Stack.Screen
         name="Contact"
         component={Contact}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="TeacherDetails"
+        component={TeacherDetails}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="StudentDetails"
+        component={StudentDetails}
         options={{headerShown: false}}
       />
     </Stack.Navigator>

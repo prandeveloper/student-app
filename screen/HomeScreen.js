@@ -26,7 +26,8 @@ export default function HomeScreen({navigation}) {
   const [course, setCourse] = useState([]);
   const [recent, setRecent] = useState([]);
   const [free, setFree] = useState([]);
-  const [category, setCategory] = useState([]);
+  const [teacher, setTeacher] = useState([]);
+  const [student, setStudent] = useState([]);
   const [banner, setBanner] = useState([]);
 
   // useEffect(() => {
@@ -57,10 +58,10 @@ export default function HomeScreen({navigation}) {
 
   const getBanner = () => {
     axios
-      .get(`https://nifty50algo.in/newadmin/api/ApiCommonController/coursesbanner`)
+      .get(`https://edumatelive.in/studentadmin/newadmin//api/ApiCommonController/bannerlisttt`)
       .then(response => {
         // console.log(response.data[0]);
-        const banner = response.data.data;
+        const banner = response.data.data[0];
         setBanner(banner);
         console.log(",,,,,,,,,",banner);
       })
@@ -85,6 +86,39 @@ export default function HomeScreen({navigation}) {
   };
   useEffect(() => {
     getCourse();
+    getBanner();
+  }, []);
+
+  const getTeacher = () => {
+    axios
+      .get(`https://edumatelive.in/studentadmin/newadmin/api/ApiCommonController/teacherbyid`)
+      .then(response => {
+        // console.log('techer////', response.data.data);
+        const teacher = response.data.data;
+        setTeacher(teacher);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  };
+  useEffect(() => {
+    getTeacher();
+  }, []);
+
+  const getStudent = () => {
+    axios
+      .get(`https://edumatelive.in/studentadmin/newadmin/api/ApiCommonController/studentbyid`)
+      .then(response => {
+        console.log('student???', response.data.data);
+        const student = response.data.data;
+        setStudent(student);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  };
+  useEffect(() => {
+    getStudent();
   }, []);
 
   const scrollRef = useRef();
@@ -206,7 +240,7 @@ export default function HomeScreen({navigation}) {
               onTouchEnd={onTouchEnd}
               pagingEnabled>
               <Image
-                source={{uri: `${banner?.poster_image}`}}
+                source={{uri: `${banner?.benner_first}`}}
                 style={{
                   width: dimension?.width,
                   height: 180,
@@ -215,7 +249,7 @@ export default function HomeScreen({navigation}) {
                 PlaceholderContent={<ActivityIndicator />}
               />
               <Image
-                source={{uri: `${banner?.poster_image}`}}
+                source={{uri: `${banner?.benner_second}`}}
                 style={{
                   width: dimension?.width,
                   height: 180,
@@ -224,7 +258,7 @@ export default function HomeScreen({navigation}) {
                 PlaceholderContent={<ActivityIndicator />}
               />
               <Image
-                source={{uri: `${banner?.poster_image}`}}
+                source={{uri: `${banner?.benner_third}`}}
                 style={{
                   width: dimension?.width,
                   height: 180,
@@ -273,38 +307,38 @@ export default function HomeScreen({navigation}) {
               ))}
             </ScrollView>
           </View>
-          {/* Category Tab Starts From Here */}
+          {/* teacher Tab Starts From Here */}
           <View>
             <Text style={styles.popular}>Top Teacher</Text>
             <ScrollView horizontal={true}>
-              {category.map(cat => (
+              {teacher.map(cat => (
                 <View key={cat._id} style={styles.catmain}>
-                  <TouchableOpacity>
+                  <TouchableOpacity onPress={()=> navigation.navigate('TeacherDetails', {id: cat.id})} >
                     <View style={styles.catview}>
                       <Image
                         style={styles.banner}
-                        source={{uri: `${cat?.icon}`}}
+                        source={{uri: `${cat?.image}`}}
                       />
-                      <Text style={styles.cattext}>{cat?.catName}</Text>
+                      <Text style={styles.cattext}>{cat?.s_name}</Text>
                     </View>
                   </TouchableOpacity>
                 </View>
               ))}
             </ScrollView>
           </View>
-          {/* Category Tab Starts From Here */}
+          {/* student Tab Starts From Here */}
           <View>
             <Text style={styles.popular}>Top Student</Text>
             <ScrollView horizontal={true}>
-              {category.map(cat => (
+              {student.map(cat => (
                 <View key={cat._id} style={styles.catmain}>
-                  <TouchableOpacity>
+                  <TouchableOpacity onPress={()=> navigation.navigate('StudentDetails', {id: cat.id})}>
                     <View style={styles.catview}>
                       <Image
                         style={styles.banner}
-                        source={{uri: `${cat?.icon}`}}
+                        source={{uri: `${cat?.image}`}}
                       />
-                      <Text style={styles.cattext}>{cat?.catName}</Text>
+                      <Text style={styles.cattext}>{cat?.s_name}</Text>
                     </View>
                   </TouchableOpacity>
                 </View>

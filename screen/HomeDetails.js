@@ -19,48 +19,22 @@ import NotifyHeader from './header/NotifyHeader';
 
 export default function HomeDetails({route, navigation}) {
   const {id} = route.params;
+  console.log('id a rhi hai ki nhi ////',id);
 
   const [detail, setDetail] = useState({});
   const [coment, setComent] = useState([]);
   const [plan, setPlan] = useState({});
+  const [pid, setPid] = useState('');
 
   // <=============== Course Detail =======>
   const getDetail = async () => {
     axiosConfig
-      .get(`https://nifty50algo.in/newadmin//api/ApiCommonController/courseviewone/${id}`)
+      .get(`https://edumatelive.in/studentadmin/newadmin//api/ApiCommonController/coursedescription/${id}`)
       .then(response => {
         setDetail(response.data.data[0]);
         console.log("aaaaaaaaaaaaa",response.data.data);
-      })
-      .catch(error => {
-        console.log(error.response);
-      });
-  };
-  // <=============== Comments =======>
-  const getComent = async () => {
-    axios
-      .get(`http://65.0.80.5:5000/api/user/allComment/${id}`)
-      .then(response => {
-        const coment = response.data.data;
-        setComent(coment);
-        console.log(coment);
-      })
-      .catch(error => {
-        console.log(error.response);
-      });
-  };
-  // <=============== Membership plan =======>
-  const getPlan = async () => {
-    axios
-      .get(`http://65.0.80.5:5000/api/user/viewone_mem_plan`, {
-        headers: {
-          'user-token': await AsyncStorage.getItem('user-token'),
-        },
-      })
-      .then(response => {
-        const plan = response.data.data.plan_Id._id;
-        setPlan(plan);
-        console.log('@@@sss', plan);
+        setPid(response.data.data[0].id_c)
+        console.log('amit ///',response.data.data[0].id_c);
       })
       .catch(error => {
         console.log(error.response);
@@ -68,51 +42,77 @@ export default function HomeDetails({route, navigation}) {
   };
   useEffect(() => {
     getDetail();
-    getComent();
-    if (AsyncStorage.getItem('user-token')) {
-      getPlan();
-    }
   }, []);
+  // <=============== Comments =======>
+  // const getComent = async () => {
+  //   axios
+  //     .get(`http://65.0.80.5:5000/api/user/allComment/${id}`)
+  //     .then(response => {
+  //       const coment = response.data.data;
+  //       setComent(coment);
+  //       console.log(coment);
+  //     })
+  //     .catch(error => {
+  //       console.log(error.response);
+  //     });
+  // };
+  // <=============== Membership plan =======>
+  // const getPlan = async () => {
+  //   axios
+  //     .get(`http://65.0.80.5:5000/api/user/viewone_mem_plan`, {
+  //       headers: {
+  //         'user-token': await AsyncStorage.getItem('user-token'),
+  //       },
+  //     })
+  //     .then(response => {
+  //       const plan = response.data.data.plan_Id._id;
+  //       setPlan(plan);
+  //       console.log('@@@sss', plan);
+  //     })
+  //     .catch(error => {
+  //       console.log(error.response);
+  //     });
+  // };
+  // useEffect(() => {
+  //   getDetail();
+  //   getComent();
+  //   // if (AsyncStorage.getItem('user-token')) {
+  //   //   getPlan();
+  //   // }
+  // }, []);
 
-  console.log('####', detail._id);
+  console.log('####/', detail.id_c);
+
+  // const enrollNow = async ()=>{
+
+  // }
 
   const enrollNow = async () => {
     axios
       .post(
-        `http://65.0.80.5:5000/api/admin/addenrollStudent`,
-        {
-          plan_Id: plan,
-          course_Id: detail._id,
-        },
-        {
-          headers: {
-            'user-token': await AsyncStorage.getItem('user-token'),
-          },
+        `https://edumatelive.in/studentadmin/newadmin//api/ApiCommonController/favuritepost`,{
+          course_id: pid,
+          user_id: await AsyncStorage.getItem('user_id')
         },
       )
       .then(response => {
-        console.log(response);
-        if (
-          response.data.message == 'success' &&
-          response.data.message === 'success'
-        ) {
-          Alert.alert('Enrolled SuccessFully');
-        }
+        console.log(response.data);
+        // if (
+        //   response.data.message == 'success' &&
+        //   response.data.message === 'success'
+        // ) {
+        //   Alert.alert('Enrolled SuccessFully');
+        // }
       })
       .catch(error => {
         console.log('####', error.response);
-        console.log(error.response.data.message);
-        if (
-          error.response.data.message == 'already exists' &&
-          error.response.data.message === 'already exists'
-        ) {
-          Alert.alert('You Already Enrolled this Course');
-        } else if (
-          error.response.data.message == 'error' &&
-          error.response.data.message === 'error'
-        ) {
-          Alert.alert('Upgrade your Membership');
-        }
+        // console.log(error.response.data.message);
+        // if (
+        //   error.response.data.message == 'already exists' &&
+        //   error.response.data.message === 'already exists'
+        // ) {
+        //   Alert.alert('You Already Enrolled this Course');
+        // } 
       });
   };
 
@@ -134,7 +134,7 @@ export default function HomeDetails({route, navigation}) {
           <TouchableOpacity>
             <Image
               style={styles.courseImage}
-              source={{uri: `${detail.poster_image}`}}
+              source={{uri: `${detail.images}`}}
             />
           </TouchableOpacity>
         </View>
@@ -155,8 +155,8 @@ export default function HomeDetails({route, navigation}) {
         <View
           style={{flexDirection: 'row', marginLeft: 10, paddingVertical: 5}}>
           <Text style={styles.teacherName}>
-            Course Type :{' '}
-            <Text style={styles.techName}>{detail?.course_type}</Text>
+          description :{' '}
+            <Text style={styles.techName}>{detail?.description}</Text>
           </Text>
         </View>
 
@@ -164,7 +164,7 @@ export default function HomeDetails({route, navigation}) {
           style={{flexDirection: 'row', marginLeft: 10, paddingVertical: 5}}>
           <Text style={styles.teacherName}>
             Created by :{' '}
-            <Text style={styles.techName}>{detail.teacher?.fullname}</Text>
+            <Text style={styles.techName}>{detail?.teacher_name}</Text>
           </Text>
         </View>
 
