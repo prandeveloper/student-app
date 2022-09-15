@@ -19,6 +19,7 @@ import {ListItem, Avatar} from 'react-native-elements';
 
 export default function SearchScreen({ navigation }) {
     const [searchQuery, setSearchQuery] = React.useState('');
+    const [teacherList,setTeacherList] = useState([])
 
     const onChangeSearch = query => setSearchQuery(query);
     const list = [
@@ -26,7 +27,7 @@ export default function SearchScreen({ navigation }) {
             name: 'Chris Jackson',
             avatar_url:
                 'https://png.pngtree.com/png-clipart/20190924/original/pngtree-business-people-avatar-icon-user-profile-free-vector-png-image_4815126.jpg',
-            subtitle: 'Both',
+            subtitle: 'Student',
         },
         {
             name: 'Amy Farha',
@@ -38,42 +39,45 @@ export default function SearchScreen({ navigation }) {
             name: 'Chris Jackson',
             avatar_url:
                 'https://png.pngtree.com/png-clipart/20190924/original/pngtree-business-people-avatar-icon-user-profile-free-vector-png-image_4815126.jpg',
-            subtitle: 'Teacher',
+            subtitle: 'Student',
         },
     ];
-
-
-    const search = async () => {
-        const url = `https://edumatelive.in/studentadmin/api-search-student.php`;
-        const response = await axios.post(url);
-        console.log(response.data);
+    const getTeacherList = async () => {
+        axios
+          .get(`https://edumatelive.in/studentadmin/newadmin/api/ApiCommonController/teacherbyid`)
+          .then((response) => {
+            console.log("<<<<<aa",response.data.data)
+            const list = response.data.data
+            setTeacherList(list)
+          })
+          .catch((error) => {
+            console.log(error);
+          });
       };
-    // const search = async () =>{
-    //     const data = {
-    //         method: 'post',
-    //         url: `https://edumatelive.in/studentadmin/api-search-student.php`,
-    //       };
-    //       const response = await axios(data);
-    //       console.log(response.data);
-    //     };
-    // }
+      useEffect(() => {
+        getTeacherList();
+      }, []);
     return (
         <View style={{ flex: 1 }}>
             {/* Header */}
             <NotifyHeader title="SEARCH" navigation={navigation} />
             <Searchbar
                 placeholder="Search"
-                value={search}
-            onChangeText={search => this.setState({search})}
+                onChangeText={onChangeSearch}
+                value={searchQuery}
             />
             <View >
-                {list.map((l, i) => (
-                    <TouchableOpacity>
+                {teacherList?.map((l, i) => (
+                    <TouchableOpacity onPress={() =>
+                        navigation.navigate('SearchDetails', {
+                          id: l.id,
+                        })
+                      } >
                         <ListItem key={i} bottomDivider style={{ marginBottom: 10 }}>
-                            <Avatar source={{ uri: l.avatar_url }} />
+                            <Avatar source={{ uri: l.image }} />
                             <ListItem.Content>
-                                <ListItem.Title>{l.name}</ListItem.Title>
-                                <ListItem.Subtitle>{l.subtitle}</ListItem.Subtitle>
+                                <ListItem.Title>{l.s_name}</ListItem.Title>
+                                <ListItem.Subtitle>{l.users}</ListItem.Subtitle>
                             </ListItem.Content>
                         </ListItem>
                     </TouchableOpacity>

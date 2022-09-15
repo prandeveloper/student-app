@@ -49,6 +49,7 @@ import BatchesForm from './screen/DrawerScreen/BatchesForm';
 import SearchScreen from './screen/SearchScreen';
 import TeacherDetails from './screen/TeacherDetails';
 import StudentDetails from './screen/StudentDetails';
+import SearchDetails from './screen/SearchDetails';
 //import Profile from "./src/profile.png";
 
 const Tab = createBottomTabNavigator();
@@ -272,6 +273,11 @@ const TabNavigation = ({navigation}) => {
       <Stack.Screen
         name="StudentDetails"
         component={StudentDetails}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="SearchDetails"
+        component={SearchDetails}
         options={{headerShown: false}}
       />
     </Stack.Navigator>

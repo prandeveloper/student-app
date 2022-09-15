@@ -1,5 +1,8 @@
-import {Picker} from '@react-native-picker/picker';
-import React, {useState} from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Picker } from '@react-native-picker/picker';
+import axios from 'axios';
+import React, { useState } from 'react';
+import { useEffect } from 'react';
 import {
   View,
   Text,
@@ -11,13 +14,15 @@ import {
   ScrollView,
 } from 'react-native';
 import DatePicker from 'react-native-datepicker';
-import {ListItem, Avatar} from 'react-native-elements';
+import { ListItem, Avatar } from 'react-native-elements';
 import CustomHeader from '../header/CustomHeader';
 
-export default function Batches({navigation}) {
+export default function Batches({ navigation }) {
   const [date, setDate] = useState('');
   const [endTime, setEndTime] = useState('');
   const [time, setTime] = useState('');
+  const [storeddata, setStoreddata] = useState('');
+  const [batchList, setBatchList] = useState([]);
   const [selectedLanguage, setSelectedLanguage] = useState('');
   const list = [
     {
@@ -39,24 +44,51 @@ export default function Batches({navigation}) {
       subtitle: 'Student',
     },
   ];
+  const getData = async () => {
+    try {
+      const user_id = await AsyncStorage.getItem('user_id');
+      if (user_id !== null) {
+        console.log('@@@@@@@@', user_id);
+        setStoreddata(user_id);
+      }
+    } catch (e) {
+      console.log('no Value in login');
+    }
+  };
+  const getBatch = async () => {
+    axios
+      .get(`https://edumatelive.in/studentadmin/newadmin/api/ApiCommonController/batchbyteacherid/${storeddata}`)
+      .then((response) => {
+        console.log("<<<<<aa", response.data.data)
+        const list = response.data.data
+        setBatchList(list)
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+  useEffect(() => {
+    getData();
+    getBatch();
+  }, [storeddata]);
   return (
     <SafeAreaView>
       <View>
         <CustomHeader title="Batches" navigation={navigation} />
       </View>
       <View >
-          {list.map((l, i) => (
-            <TouchableOpacity  >
-              <ListItem key={i} bottomDivider style={{marginBottom:10}}>
-              <Avatar source={{uri: l.avatar_url}} />
+        {batchList?.map((l, i) => (
+          <TouchableOpacity  >
+            <ListItem key={i} bottomDivider style={{ marginBottom: 10 }}>
+              <Avatar source={{ uri: l.avatar_url }} />
               <ListItem.Content>
-                <ListItem.Title>{l.name}</ListItem.Title>
-                <ListItem.Subtitle>{l.subtitle}</ListItem.Subtitle>
+                <ListItem.Title>{l.teacher}</ListItem.Title>
+                <ListItem.Subtitle>{l.subject}</ListItem.Subtitle>
               </ListItem.Content>
             </ListItem>
-            </TouchableOpacity>
-          ))}
-        </View>
+          </TouchableOpacity>
+        ))}
+      </View>
       <ScrollView>
         <View style={styles.mainContainer}>
           {/* <View style={styles.date}>
@@ -166,7 +198,7 @@ export default function Batches({navigation}) {
             </View>
           </View> */}
           <View style={styles.buttonView}>
-            <TouchableOpacity style={styles.buttonTouch} onPress={()=> navigation.navigate('BatchesForm')}>
+            <TouchableOpacity style={styles.buttonTouch} onPress={() => navigation.navigate('BatchesForm')}>
               <Text style={styles.buttonText}>ADD BATCH</Text>
             </TouchableOpacity>
           </View>
@@ -182,7 +214,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginVertical: 10,
   },
-  dateText: {color: '#000', fontWeight: '600'},
+  dateText: { color: '#000', fontWeight: '600' },
   startText: {
     flex: 1,
     justifyContent: 'center',

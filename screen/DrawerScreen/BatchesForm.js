@@ -1,5 +1,7 @@
-import {Picker} from '@react-native-picker/picker';
-import React, {useState} from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Picker } from '@react-native-picker/picker';
+import axios from 'axios';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -9,15 +11,60 @@ import {
   TouchableHighlight,
   TouchableOpacity,
   ScrollView,
+  Alert,
 } from 'react-native';
 import DatePicker from 'react-native-datepicker';
 import CustomHeader from '../header/CustomHeader';
 
-export default function BatchesForm({navigation}) {
+export default function BatchesForm({ navigation }) {
   const [date, setDate] = useState('');
+  const [end_date, setEnd_date] = useState('');
   const [endTime, setEndTime] = useState('');
   const [time, setTime] = useState('');
   const [selectedLanguage, setSelectedLanguage] = useState('');
+
+  const AddBatch = async () => {
+    console.log('data.....',date,end_date,time,endTime,selectedLanguage);
+    axios
+      .post(`https://edumatelive.in/studentadmin/newadmin/api/ApiCommonController/postbatch`, {
+        start_date: date,
+        end_date: end_date,
+        start_time: time,
+        end_time: endTime,
+        subject: selectedLanguage,
+        user_id: await AsyncStorage.getItem('user_id')
+      })
+      .then(response => {
+        console.log('@@@@@', response.data);
+        // if (response.data.message === "data Send successfully.") {
+        //   setModalVisible(true)
+        // } else {
+        //   Alert.alert("error.");
+        // }
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  };
+  // const AddBatch = async () => {
+  //   try {
+  //     const res = await axios.post(`https://edumatelive.in/studentadmin/newadmin/api/ApiCommonController/postbatch`,{
+  // start_date:date,
+  // end_date:end_date,
+  // start_time:time,
+  // end_time:endTime,
+  // subject:selectedLanguage
+  //     }, {
+  //       headers: {
+  //         'user_id': await AsyncStorage.getItem('user_id'),
+  //       },
+  //     })
+  //     console.log("kya hua ??",res);
+  //   } catch (error) {
+  //     Alert("An error has occurred");
+  //   }
+  // }
+
   return (
     <SafeAreaView>
       <View>
@@ -31,7 +78,7 @@ export default function BatchesForm({navigation}) {
             </View>
             <View style={styles.startDate}>
               <DatePicker
-                style={{width: 180}}
+                style={{ width: 180 }}
                 date={date}
                 placeholder=""
                 format="DD-MM-YYYY"
@@ -62,13 +109,13 @@ export default function BatchesForm({navigation}) {
             </View>
             <View style={styles.startDate}>
               <DatePicker
-                style={{width: 180}}
-                date={date}
+                style={{ width: 180 }}
+                date={end_date}
                 placeholder=""
                 format="DD-MM-YYYY"
                 confirmBtnText="Confirm"
                 cancelBtnText="Cancel"
-                onDateChange={d => setDate(d)}
+                onDateChange={d => setEnd_date(d)}
                 customStyles={{
                   dateIcon: {
                     position: 'absolute',
@@ -95,8 +142,8 @@ export default function BatchesForm({navigation}) {
               <TextInput
                 placeholder="End Time"
                 keyboardType="ascii-capable"
-                value={endTime}
-                onChange={setEndTime}
+                value={time}
+                onChangeText={setTime}
               />
             </View>
           </View>
@@ -109,7 +156,7 @@ export default function BatchesForm({navigation}) {
                 placeholder="End Time"
                 keyboardType="ascii-capable"
                 value={endTime}
-                onChange={setEndTime}
+                onChangeText={setEndTime}
               />
             </View>
           </View>
@@ -119,7 +166,7 @@ export default function BatchesForm({navigation}) {
             </View>
             <View style={styles.startDate}>
               <Picker
-                style={{width: 200}}
+                style={{ width: 200 }}
                 selectedValue={selectedLanguage}
                 onValueChange={(itemValue, itemIndex) =>
                   setSelectedLanguage(itemValue)
@@ -132,7 +179,7 @@ export default function BatchesForm({navigation}) {
             </View>
           </View>
           <View style={styles.buttonView}>
-            <TouchableOpacity style={styles.buttonTouch}>
+            <TouchableOpacity style={styles.buttonTouch} onPress={AddBatch} >
               <Text style={styles.buttonText}>ADD BATCH</Text>
             </TouchableOpacity>
           </View>
@@ -148,7 +195,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginVertical: 10,
   },
-  dateText: {color: '#000', fontWeight: '600'},
+  dateText: { color: '#000', fontWeight: '600' },
   startText: {
     flex: 1,
     justifyContent: 'center',

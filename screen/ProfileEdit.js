@@ -30,6 +30,11 @@ export default function ProfileEdit({navigation}) {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [singleFile, setSingleFile] = useState('');
+  const [address, setAddress] = useState('');
+  const [state, setState] = useState('');
+  const [city, setCity] = useState('');
+  const [experience, setExperience] = useState('');
+
 
   // const getUser = async () => {
   //   axios
@@ -93,33 +98,38 @@ export default function ProfileEdit({navigation}) {
   function editProfile() {
     handleSubmit();
   }
-  // const handleSubmit = async () => {
-  //   console.log(singleFile.assets[0].base64, fullname, email, mobile, password);
-  //   const data = new FormData();
-  //   data.append('fullname', fullname);
-  //   data.append('email', email);
-  //   data.append('mobile', mobile);
-  //   data.append('password', password);
-  //   data.append('cnfmPassword', confirmPassword);
-  //   data.append('userimg', singleFile.assets[0].base64);
+  const handleSubmit = async () => {
+    console.log(singleFile.assets[0].base64, fullname, email, mobile, password);
+    const data = new FormData();
+    data.append('s_name', fullname);
+    data.append('email', email);
+    data.append('phone', mobile);
+    data.append('password', password);
+    data.append('cpassword', confirmPassword);
+    data.append('address', address);
+    data.append('city', city);
+    data.append('state', state);
+    data.append('experience', experience);
+    data.append('experience', experience);
+    data.append('image', singleFile.assets[0].base64);
 
-  //   fetch(`http://65.0.80.5:5000/api/user/edituserbytoken`, {
-  //     method: 'post',
-  //     headers: {
-  //       'Content-Type': 'multipart/form-data',
-  //       'user-token': await AsyncStorage.getItem('user-token'),
-  //     },
-  //     body: data,
-  //   })
-  //     .then(response => {
-  //       response.json().then(res => {
-  //         console.log(res);
-  //       });
-  //     })
-  //     .catch(error => {
-  //       console.log(error);
-  //     });
-  // };
+    fetch(`https://edumatelive.in/studentadmin/newadmin/api/ApiCommonController/profileuser`, {
+      method: 'post',
+      headers: {
+        'Content-Type': 'multipart/form-data',
+        'id': await AsyncStorage.getItem('user_id'),
+      },
+      body: data,
+    })
+      .then(response => {
+        response.json().then(res => {
+          console.log(res);
+        });
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  };
   return (
     <View style={styles.container}>
       <CustomHeader title="PROFILE" navigation={navigation} />
@@ -214,8 +224,8 @@ export default function ProfileEdit({navigation}) {
               style={{paddingHorizontal: 12, flex: 1}}
               placeholder="Area"
               textContentType="Email"
-              onChangeText={setEmail}
-              value={email}
+              onChangeText={setAddress}
+              value={address}
               placeholderTextColor={'#7A7A81'}
               color="black"
               keyboardType="email-address"
@@ -227,8 +237,8 @@ export default function ProfileEdit({navigation}) {
               style={{paddingHorizontal: 12, flex: 1}}
               placeholder="State"
               textContentType="Email"
-              onChangeText={setEmail}
-              value={email}
+              onChangeText={setState}
+              value={state}
               placeholderTextColor={'#7A7A81'}
               color="black"
               keyboardType="email-address"
@@ -240,8 +250,21 @@ export default function ProfileEdit({navigation}) {
               style={{paddingHorizontal: 12, flex: 1}}
               placeholder="City"
               textContentType="Email"
-              onChangeText={setEmail}
-              value={email}
+              onChangeText={setCity}
+              value={city}
+              placeholderTextColor={'#7A7A81'}
+              color="black"
+              keyboardType="email-address"
+            />
+          </View>
+          <View style={styles.inputView}>
+            <Icon name="vcard" color="black" size={20} />
+            <TextInput
+              style={{paddingHorizontal: 12, flex: 1}}
+              placeholder="experience"
+              textContentType="Email"
+              onChangeText={setExperience}
+              value={experience}
               placeholderTextColor={'#7A7A81'}
               color="black"
               keyboardType="email-address"
@@ -270,7 +293,7 @@ export default function ProfileEdit({navigation}) {
               </View>
             )}
           </View>
-          <TouchableOpacity style={styles.logbut} >
+          <TouchableOpacity style={styles.logbut} onPress={editProfile} >
             <Text style={{fontSize: 20, fontWeight: 'bold', color: 'white'}}>
               Update
             </Text>
