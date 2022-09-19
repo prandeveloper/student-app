@@ -57,7 +57,7 @@ export default function Batches({ navigation }) {
   };
   const getBatch = async () => {
     axios
-      .get(`https://edumatelive.in/studentadmin/newadmin/api/ApiCommonController/batchbyteacherid/${storeddata}`)
+      .get(`https://edumatelive.in/studentadmin/newadmin/api/ApiCommonController/batchlistbyuserid/${storeddata}`)
       .then((response) => {
         console.log("<<<<<aa", response.data.data)
         const list = response.data.data
@@ -80,10 +80,11 @@ export default function Batches({ navigation }) {
         {batchList?.map((l, i) => (
           <TouchableOpacity  >
             <ListItem key={i} bottomDivider style={{ marginBottom: 10 }}>
-              <Avatar source={{ uri: l.avatar_url }} />
+              {/* <Avatar source={{ uri: l.avatar_url }} /> */}
               <ListItem.Content>
-                <ListItem.Title>{l.teacher}</ListItem.Title>
-                <ListItem.Subtitle>{l.subject}</ListItem.Subtitle>
+                <ListItem.Title>{l.batch_name}</ListItem.Title>
+                <ListItem.Subtitle>{l.batch_description}</ListItem.Subtitle>
+                <ListItem.Subtitle>{l.start_time}</ListItem.Subtitle>
               </ListItem.Content>
             </ListItem>
           </TouchableOpacity>

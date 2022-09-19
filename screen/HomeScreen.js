@@ -74,7 +74,7 @@ export default function HomeScreen({navigation}) {
 
   const getCourse = () => {
     axios
-      .get(`https://nifty50algo.in/newadmin//api/ApiCommonController/courses`)
+      .get(`https://edumatelive.in/studentadmin/newadmin/api/ApiCommonController/courses`)
       .then(response => {
         console.log('Course', response.data.data);
         const course = response.data.data;

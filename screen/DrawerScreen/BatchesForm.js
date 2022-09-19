@@ -21,10 +21,12 @@ export default function BatchesForm({ navigation }) {
   const [end_date, setEnd_date] = useState('');
   const [endTime, setEndTime] = useState('');
   const [time, setTime] = useState('');
+  const [description, setDescription] = useState('');
+  const [batchName, setBatchName] = useState('');
   const [selectedLanguage, setSelectedLanguage] = useState('');
 
   const AddBatch = async () => {
-    console.log('data.....',date,end_date,time,endTime,selectedLanguage);
+    console.log('data.....',date,end_date,time,endTime,selectedLanguage,batchName,description);
     axios
       .post(`https://edumatelive.in/studentadmin/newadmin/api/ApiCommonController/postbatch`, {
         start_date: date,
@@ -32,6 +34,8 @@ export default function BatchesForm({ navigation }) {
         start_time: time,
         end_time: endTime,
         subject: selectedLanguage,
+        batch_name:batchName,
+        batch_description:description,
         user_id: await AsyncStorage.getItem('user_id')
       })
       .then(response => {
@@ -157,6 +161,32 @@ export default function BatchesForm({ navigation }) {
                 keyboardType="ascii-capable"
                 value={endTime}
                 onChangeText={setEndTime}
+              />
+            </View>
+          </View>
+          <View style={styles.date}>
+            <View style={styles.startText}>
+              <Text style={styles.dateText}>BATCH NAME</Text>
+            </View>
+            <View style={styles.startDate}>
+              <TextInput
+                placeholder="Enter Batch Name"
+                keyboardType="ascii-capable"
+                value={batchName}
+                onChangeText={setBatchName}
+              />
+            </View>
+          </View>
+          <View style={styles.date}>
+            <View style={styles.startText}>
+              <Text style={styles.dateText}>DESCRIPTION</Text>
+            </View>
+            <View style={styles.startDate}>
+              <TextInput
+                placeholder="Enter Batch Description"
+                keyboardType="ascii-capable"
+                value={description}
+                onChangeText={setDescription}
               />
             </View>
           </View>

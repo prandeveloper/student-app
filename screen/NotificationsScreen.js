@@ -20,24 +20,18 @@ export default function NotificationScreen({navigation}) {
 
   const getNotify = async () => {
     axios
-      .get('http://65.0.80.5:5000/api/user/allUserNotification', {
-        headers: {
-          'user-token': await AsyncStorage.getItem('user-token'),
-        },
-      })
+      .get('https://edumatelive.in/studentadmin/newadmin/api/ApiCommonController/notificationstudent',)
       .then(response => {
         const notify = response.data.data;
         setNotify(notify);
-        console.log(notify);
+        console.log("Notification ??????",notify);
       })
       .catch(error => {
         console.log(error.response);
       });
   };
   useEffect(() => {
-    if (AsyncStorage.getItem('user-token')) {
       getNotify();
-    }
   }, []);
 
   function CustomHeader({title, navigation}) {
@@ -91,13 +85,14 @@ export default function NotificationScreen({navigation}) {
               <ListItem
                 key={note?._id}
                 bottomDivider
-                onPress={() =>
-                  navigation.navigate('NotifyDetail', {id: note._id})
-                }>
+                // onPress={() =>
+                //   navigation.navigate('NotifyDetail', {id: note._id})
+                // }
+                >
                 <Icon name="bell" color="black" size={25} />
                 <ListItem.Content>
-                  <ListItem.Title>{note?.noti_title}</ListItem.Title>
-                  {/* <ListItem.Subtitle>{note?.desc}</ListItem.Subtitle> */}
+                  <ListItem.Title>{note?.title}</ListItem.Title>
+                  <ListItem.Subtitle>{note?.message}</ListItem.Subtitle>
                 </ListItem.Content>
               </ListItem>
             ))}

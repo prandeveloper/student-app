@@ -21,6 +21,20 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {launchImageLibrary} from 'react-native-image-picker';
 import CustomHeader from './header/CustomHeader';
 
+import { MultiSelect } from 'react-native-element-dropdown';
+import AntDesign from 'react-native-vector-icons/AntDesign';
+
+const DATA = [
+    { label: 'React Naive', value: '1' },
+    { label: 'Javascript', value: '2' },
+    { label: 'Laravel', value: '3' },
+    { label: 'PHP', value: '4' },
+    { label: 'jQuery', value: '5' },
+    { label: 'Bootstrap', value: '6' },
+    { label: 'HTML', value: '7' },
+    { label: 'CSS', value: '8' },
+];
+
 export default function ProfileEdit({navigation}) {
   const [user, setUser] = useState({});
   const [passwordSecured, setPasswordSecured] = useState(true);
@@ -34,37 +48,79 @@ export default function ProfileEdit({navigation}) {
   const [state, setState] = useState('');
   const [city, setCity] = useState('');
   const [experience, setExperience] = useState('');
+  const [education, setEducation] = useState('');
+  const [Subject, setSubject] = useState('');
+  const [selected, setSelected] = useState([]);
+  const [storeProfile, setStoreProfile] = useState('');
+  const [showData,setShowData] = useState([])
+
+  const renderDataItem = (item) => {
+    return (
+        <View style={styles.item}>
+            <Text style={styles.selectedTextStyle}>{item.subject_name}</Text>
+            <AntDesign style={styles.icon} color="black" name="Safety" size={20} />
+        </View>
+    );
+};
 
 
-  // const getUser = async () => {
-  //   axios
-  //     .get('http://65.0.80.5:5000/api/user/myprofile', {
-  //       headers: {
-  //         'user-token': await AsyncStorage.getItem('user-token'),
-  //       },
-  //     })
-  //     .then(response => {
-  //       const user = response.data.data;
+ const getDropData = async () => {
+    axios
+      .get('https://edumatelive.in/studentadmin/newadmin/api/ApiCommonController/subjectlistget',)
+      .then(response => {
+        // console.log("drop data//////",response.data.data);
+        const drop = response.data.data
+        setShowData(drop)
+      })
+      .catch(error => {
+        console.log(error.response);
+      });
+  };
+  useEffect(() => {
+    getDropData();
+  }, []);
 
-  //       {
-  //         setFullname(user.fullname);
-  //         setEmail(user.email);
-  //         setMobile(JSON.stringify(user.mobile));
-  //         setPassword(user.password);
-  //         setConfirmPassword(user.cnfmPassword);
-  //       }
-  //       setUser(user);
-  //       console.log(user);
-  //       {
-  //       }
-  //     })
-  //     .catch(error => {
-  //       console.log(error.response);
-  //     });
-  // };
-  // useEffect(() => {
-  //   getUser();
-  // }, []);
+  const getDataProfile = async () => {
+    try {
+      const user_id = await AsyncStorage.getItem('user_id');
+      if (user_id !== null) {
+        console.log('@@@@@@@@', user_id);
+        setStoreProfile(user_id);
+      }
+    } catch (e) {
+      console.log('no Value in login');
+    }
+  };
+  const getUser = async () => {
+    axios
+      .get(`https://edumatelive.in/studentadmin/newadmin/api/ApiCommonController/usersingledata/${storeProfile}`,)
+      .then(response => {
+        console.log("edit profile ///////",response.data.data);
+        const user = response.data.data;
+        {
+          setFullname(user[0].fullname);
+          setEmail(user[0].email);
+          setMobile(JSON.stringify(user[0].mobile));
+          setPassword(user[0].password);
+          setConfirmPassword(user[0].cnfmPassword);
+          setAddress(user[0].address);
+          setCity(user[0].city);
+          setEducation(user[0].education);
+          setExperience(user[0].experience);
+          setState(user[0].state);
+        }
+        setUser(user);
+        console.log(user);
+      }
+      )
+      .catch(error => {
+        console.log(error.response);
+      });
+  };
+  useEffect(() => {
+    getDataProfile();
+    getUser();
+  }, [storeProfile]);
 
   const chooseFrontFile = type => {
     let options = {
@@ -99,7 +155,7 @@ export default function ProfileEdit({navigation}) {
     handleSubmit();
   }
   const handleSubmit = async () => {
-    console.log(singleFile.assets[0].base64, fullname, email, mobile, password);
+    console.log(singleFile.assets[0].base64, fullname, email, mobile, password,education,selected);
     const data = new FormData();
     data.append('s_name', fullname);
     data.append('email', email);
@@ -110,7 +166,8 @@ export default function ProfileEdit({navigation}) {
     data.append('city', city);
     data.append('state', state);
     data.append('experience', experience);
-    data.append('experience', experience);
+    data.append('education', education);
+    // data.append('Subject', selected);
     data.append('image', singleFile.assets[0].base64);
 
     fetch(`https://edumatelive.in/studentadmin/newadmin/api/ApiCommonController/profileuser`, {
@@ -270,6 +327,59 @@ export default function ProfileEdit({navigation}) {
               keyboardType="email-address"
             />
           </View>
+          <View style={styles.inputView}>
+            <Icon name="vcard" color="black" size={20} />
+            <TextInput
+              style={{paddingHorizontal: 12, flex: 1}}
+              placeholder="Education"
+              textContentType="Email"
+              onChangeText={setEducation}
+              value={education}
+              placeholderTextColor={'#7A7A81'}
+              color="black"
+              keyboardType="email-address"
+            />
+          </View>
+          <View style={styles.inputView1}>
+            {/* <Icon name="vcard" color="black" size={20} /> */}
+           <View style={{width:'100%',marginTop:20}} >
+           <MultiSelect
+                style={styles.dropdown}
+                placeholderStyle={styles.placeholderStyle}
+                selectedTextStyle={styles.selectedTextStyle}
+                inputSearchStyle={styles.inputSearchStyle}
+                iconStyle={styles.iconStyle}
+                data={showData}
+                labelField="subject_name"
+                valueField="value"
+                placeholder="Select Subject"
+                value={selected}
+                search
+                searchPlaceholder="Search..."
+                onChange={item => {
+                    setSelected(item);
+                }}
+                renderLeftIcon={() => (
+                    <AntDesign
+                        style={styles.icon}
+                        color="black"
+                        name="Safety"
+                        size={20}
+                    />
+                )}
+                renderItem={renderDataItem}
+                renderSelectedItem={(item, unSelect) => (
+                    <TouchableOpacity onPress={() => unSelect && unSelect(item)}>
+                        <View style={styles.selectedStyle}>
+                            <Text style={styles.textSelectedStyle}>{item.subject_name}</Text>
+                            <AntDesign color="black" name="delete" size={17} />
+                        </View>
+                    </TouchableOpacity>
+                )}
+            />
+           </View>
+      
+          </View>
           <View style={styles.imagetext}>
             <Text style={styles.textimage}>Upload Image</Text>
           </View>
@@ -315,14 +425,14 @@ const styles = StyleSheet.create({
   },
   inputView: {
     marginTop: 20,
-    width: '90%',
+    width: '100%',
     height: 55,
     backgroundColor: '#f1f3f6',
     paddingHorizontal: 10,
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    marginLeft: 20,
+    marginLeft: 10,
   },
   logbut: {
     width: '90%',
@@ -423,4 +533,67 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '600',
   },
+  dropdown: {
+    height: 55,
+    backgroundColor: '#f1f3f6',
+    borderRadius: 12,
+    padding: 12,
+    shadowColor: '#000',
+    shadowOffset: {
+        width: 0,
+        height: 1,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 1.41,
+
+    elevation: 2,
+},
+placeholderStyle: {
+    fontSize: 16,
+},
+selectedTextStyle: {
+    fontSize: 14,
+},
+iconStyle: {
+    width: 20,
+    height: 20,
+},
+inputSearchStyle: {
+    height: 40,
+    fontSize: 16,
+},
+icon: {
+    marginRight: 10,
+    marginLeft:10
+},
+item: {
+    padding: 17,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+},
+selectedStyle: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 14,
+    backgroundColor: '#f1f3f6',
+    shadowColor: '#000',
+    marginTop: 8,
+    marginRight: 12,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    shadowOffset: {
+        width: 0,
+        height: 1,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 1.41,
+
+    elevation: 2,
+},
+textSelectedStyle: {
+    marginRight: 5,
+    fontSize: 16,
+},
 });
