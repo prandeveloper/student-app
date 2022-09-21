@@ -20,19 +20,18 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {launchImageLibrary} from 'react-native-image-picker';
 import CustomHeader from './header/CustomHeader';
-
-import { MultiSelect } from 'react-native-element-dropdown';
+// import {MultiSelect} from 'react-native-element-dropdown';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 
 const DATA = [
-    { label: 'React Naive', value: '1' },
-    { label: 'Javascript', value: '2' },
-    { label: 'Laravel', value: '3' },
-    { label: 'PHP', value: '4' },
-    { label: 'jQuery', value: '5' },
-    { label: 'Bootstrap', value: '6' },
-    { label: 'HTML', value: '7' },
-    { label: 'CSS', value: '8' },
+  {label: 'React Naive', value: '1'},
+  {label: 'Javascript', value: '2'},
+  {label: 'Laravel', value: '3'},
+  {label: 'PHP', value: '4'},
+  {label: 'jQuery', value: '5'},
+  {label: 'Bootstrap', value: '6'},
+  {label: 'HTML', value: '7'},
+  {label: 'CSS', value: '8'},
 ];
 
 export default function ProfileEdit({navigation}) {
@@ -52,25 +51,26 @@ export default function ProfileEdit({navigation}) {
   const [Subject, setSubject] = useState('');
   const [selected, setSelected] = useState([]);
   const [storeProfile, setStoreProfile] = useState('');
-  const [showData,setShowData] = useState([])
+  const [showData, setShowData] = useState([]);
 
-  const renderDataItem = (item) => {
+  const renderDataItem = item => {
     return (
-        <View style={styles.item}>
-            <Text style={styles.selectedTextStyle}>{item.subject_name}</Text>
-            <AntDesign style={styles.icon} color="black" name="Safety" size={20} />
-        </View>
+      <View style={styles.item}>
+        <Text style={styles.selectedTextStyle}>{item.subject_name}</Text>
+        <AntDesign style={styles.icon} color="black" name="Safety" size={20} />
+      </View>
     );
-};
+  };
 
-
- const getDropData = async () => {
+  const getDropData = async () => {
     axios
-      .get('https://edumatelive.in/studentadmin/newadmin/api/ApiCommonController/subjectlistget',)
+      .get(
+        'https://edumatelive.in/studentadmin/newadmin/api/ApiCommonController/subjectlistget',
+      )
       .then(response => {
         // console.log("drop data//////",response.data.data);
-        const drop = response.data.data
-        setShowData(drop)
+        const drop = response.data.data;
+        setShowData(drop);
       })
       .catch(error => {
         console.log(error.response);
@@ -93,9 +93,11 @@ export default function ProfileEdit({navigation}) {
   };
   const getUser = async () => {
     axios
-      .get(`https://edumatelive.in/studentadmin/newadmin/api/ApiCommonController/usersingledata/${storeProfile}`,)
+      .get(
+        `https://edumatelive.in/studentadmin/newadmin/api/ApiCommonController/usersingledata/${storeProfile}`,
+      )
       .then(response => {
-        console.log("edit profile ///////",response.data.data);
+        console.log('edit profile ///////', response.data.data);
         const user = response.data.data;
         {
           setFullname(user[0].fullname);
@@ -111,8 +113,7 @@ export default function ProfileEdit({navigation}) {
         }
         setUser(user);
         console.log(user);
-      }
-      )
+      })
       .catch(error => {
         console.log(error.response);
       });
@@ -155,7 +156,15 @@ export default function ProfileEdit({navigation}) {
     handleSubmit();
   }
   const handleSubmit = async () => {
-    console.log(singleFile.assets[0].base64, fullname, email, mobile, password,education,selected);
+    console.log(
+      singleFile.assets[0].base64,
+      fullname,
+      email,
+      mobile,
+      password,
+      education,
+      selected,
+    );
     const data = new FormData();
     data.append('s_name', fullname);
     data.append('email', email);
@@ -170,14 +179,17 @@ export default function ProfileEdit({navigation}) {
     // data.append('Subject', selected);
     data.append('image', singleFile.assets[0].base64);
 
-    fetch(`https://edumatelive.in/studentadmin/newadmin/api/ApiCommonController/profileuser`, {
-      method: 'post',
-      headers: {
-        'Content-Type': 'multipart/form-data',
-        'id': await AsyncStorage.getItem('user_id'),
+    fetch(
+      `https://edumatelive.in/studentadmin/newadmin/api/ApiCommonController/profileuser`,
+      {
+        method: 'post',
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          id: await AsyncStorage.getItem('user_id'),
+        },
+        body: data,
       },
-      body: data,
-    })
+    )
       .then(response => {
         response.json().then(res => {
           console.log(res);
@@ -342,8 +354,8 @@ export default function ProfileEdit({navigation}) {
           </View>
           <View style={styles.inputView1}>
             {/* <Icon name="vcard" color="black" size={20} /> */}
-           <View style={{width:'100%',marginTop:20}} >
-           <MultiSelect
+            {/* <View style={{width: '100%', marginTop: 20}}>
+              <MultiSelect
                 style={styles.dropdown}
                 placeholderStyle={styles.placeholderStyle}
                 selectedTextStyle={styles.selectedTextStyle}
@@ -357,28 +369,29 @@ export default function ProfileEdit({navigation}) {
                 search
                 searchPlaceholder="Search..."
                 onChange={item => {
-                    setSelected(item);
+                  setSelected(item);
                 }}
                 renderLeftIcon={() => (
-                    <AntDesign
-                        style={styles.icon}
-                        color="black"
-                        name="Safety"
-                        size={20}
-                    />
+                  <AntDesign
+                    style={styles.icon}
+                    color="black"
+                    name="Safety"
+                    size={20}
+                  />
                 )}
                 renderItem={renderDataItem}
                 renderSelectedItem={(item, unSelect) => (
-                    <TouchableOpacity onPress={() => unSelect && unSelect(item)}>
-                        <View style={styles.selectedStyle}>
-                            <Text style={styles.textSelectedStyle}>{item.subject_name}</Text>
-                            <AntDesign color="black" name="delete" size={17} />
-                        </View>
-                    </TouchableOpacity>
+                  <TouchableOpacity onPress={() => unSelect && unSelect(item)}>
+                    <View style={styles.selectedStyle}>
+                      <Text style={styles.textSelectedStyle}>
+                        {item.subject_name}
+                      </Text>
+                      <AntDesign color="black" name="delete" size={17} />
+                    </View>
+                  </TouchableOpacity>
                 )}
-            />
-           </View>
-      
+              />
+            </View> */}
           </View>
           <View style={styles.imagetext}>
             <Text style={styles.textimage}>Upload Image</Text>
@@ -403,7 +416,7 @@ export default function ProfileEdit({navigation}) {
               </View>
             )}
           </View>
-          <TouchableOpacity style={styles.logbut} onPress={editProfile} >
+          <TouchableOpacity style={styles.logbut} onPress={editProfile}>
             <Text style={{fontSize: 20, fontWeight: 'bold', color: 'white'}}>
               Update
             </Text>
@@ -540,39 +553,39 @@ const styles = StyleSheet.create({
     padding: 12,
     shadowColor: '#000',
     shadowOffset: {
-        width: 0,
-        height: 1,
+      width: 0,
+      height: 1,
     },
     shadowOpacity: 0.2,
     shadowRadius: 1.41,
 
     elevation: 2,
-},
-placeholderStyle: {
+  },
+  placeholderStyle: {
     fontSize: 16,
-},
-selectedTextStyle: {
+  },
+  selectedTextStyle: {
     fontSize: 14,
-},
-iconStyle: {
+  },
+  iconStyle: {
     width: 20,
     height: 20,
-},
-inputSearchStyle: {
+  },
+  inputSearchStyle: {
     height: 40,
     fontSize: 16,
-},
-icon: {
+  },
+  icon: {
     marginRight: 10,
-    marginLeft:10
-},
-item: {
+    marginLeft: 10,
+  },
+  item: {
     padding: 17,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-},
-selectedStyle: {
+  },
+  selectedStyle: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
@@ -584,16 +597,16 @@ selectedStyle: {
     paddingHorizontal: 12,
     paddingVertical: 8,
     shadowOffset: {
-        width: 0,
-        height: 1,
+      width: 0,
+      height: 1,
     },
     shadowOpacity: 0.2,
     shadowRadius: 1.41,
 
     elevation: 2,
-},
-textSelectedStyle: {
+  },
+  textSelectedStyle: {
     marginRight: 5,
     fontSize: 16,
-},
+  },
 });
