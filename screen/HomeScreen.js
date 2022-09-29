@@ -240,7 +240,7 @@ export default function HomeScreen({navigation}) {
               onTouchEnd={onTouchEnd}
               pagingEnabled>
               <Image
-                source={{uri: `${banner?.benner_first}`}}
+                source={{uri: `${banner?.image}`}}
                 style={{
                   width: dimension?.width,
                   height: 180,
@@ -249,7 +249,7 @@ export default function HomeScreen({navigation}) {
                 PlaceholderContent={<ActivityIndicator />}
               />
               <Image
-                source={{uri: `${banner?.benner_second}`}}
+                source={{uri: `${banner?.image1}`}}
                 style={{
                   width: dimension?.width,
                   height: 180,
@@ -258,7 +258,7 @@ export default function HomeScreen({navigation}) {
                 PlaceholderContent={<ActivityIndicator />}
               />
               <Image
-                source={{uri: `${banner?.benner_third}`}}
+                source={{uri: `${banner?.image2}`}}
                 style={{
                   width: dimension?.width,
                   height: 180,

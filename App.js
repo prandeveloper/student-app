@@ -285,28 +285,36 @@ const TabNavigation = ({navigation}) => {
 };
 
 const App = ({navigation}) => {
-  const [user, setUser] = useState({});
+  const [user, setUser] = useState([]);
+  const [storedata, setStoredata] = useState({});
 
+  const getData = async () => {
+    try {
+      const user_id = await AsyncStorage.getItem('user_id');
+      if (user_id !== null) {
+        console.log('@@@@@@@@', user_id);
+        setStoredata(user_id);
+      }
+    } catch (e) {
+      console.log('no Value in login');
+    }
+  };
   const getUser = async () => {
     axios
-      .get('http://65.0.80.5:5000/api/user/myprofile', {
-        headers: {
-          'user-token': await AsyncStorage.getItem('user-token'),
-        },
-      })
+      .get(`https://edumatelive.in/studentadmin/newadmin/api/ApiCommonController/usernewdata/${storedata}`,)
       .then(response => {
-        const user = response.data.data;
+        const user = response.data.data[0];
         setUser(user);
-        console.log(user);
+        console.log("Profile #############",user);
       })
       .catch(error => {
         console.log(error.response);
       });
   };
-
   useEffect(() => {
+    getData();
     getUser();
-  }, []);
+  }, [storedata]);
 
   const CustomContentContent = ({navigation}) => {
     return (
@@ -326,7 +334,7 @@ const App = ({navigation}) => {
               user?.userimg !== undefined ? (
                 <TouchableOpacity>
                   <Image
-                    source={{uri: `${user?.userimg}`}}
+                    source={{uri: `${user?.image}`}}
                     // resizeMode="contain"
                     style={{width: 60, height: 60, borderRadius: 50}}
                   />
@@ -352,7 +360,7 @@ const App = ({navigation}) => {
                   fontWeight: 'bold',
                   color: 'black',
                 }}>
-                {user?.fullname}
+                {user?.s_name}
               </Text>
               <View style={{flexDirection: 'row'}}>
                 <Text style={{color: 'black'}}>{user?.email}</Text>
@@ -615,6 +623,7 @@ const App = ({navigation}) => {
                   // navigation.replace('Login');
                   console.log('>>>>>>>>>>>');
                   await AsyncStorage.removeItem('user_id');
+                  await AsyncStorage.removeItem('user_type');
                 }}>
                 <Text
                   style={{

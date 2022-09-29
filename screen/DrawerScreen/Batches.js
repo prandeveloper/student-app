@@ -24,6 +24,7 @@ export default function Batches({ navigation }) {
   const [storeddata, setStoreddata] = useState('');
   const [batchList, setBatchList] = useState([]);
   const [selectedLanguage, setSelectedLanguage] = useState('');
+  const [batchId, setBatchId] = useState('');
   const list = [
     {
       name: 'Chris Jackson',
@@ -62,6 +63,8 @@ export default function Batches({ navigation }) {
         console.log("<<<<<aa", response.data.data)
         const list = response.data.data
         setBatchList(list)
+        console.log("????????????",list[0].id);
+        setBatchId(list[0].id)
       })
       .catch((error) => {
         console.log(error);
@@ -71,6 +74,34 @@ export default function Batches({ navigation }) {
     getData();
     getBatch();
   }, [storeddata]);
+  const enrollNow = async () => {
+    axios
+      .post(
+        `https://edumatelive.in/studentadmin/newadmin/api/ApiCommonController/joinbatch`,{
+          user_id: await AsyncStorage.getItem('user_id'),
+          batch_id:batchId,
+        },
+      )
+      .then(response => {
+        console.log(response.data);
+        // if (
+        //   response.data.message == 'success' &&
+        //   response.data.message === 'success'
+        // ) {
+        //   Alert.alert('Enrolled SuccessFully');
+        // }
+      })
+      .catch(error => {
+        console.log('####', error.response);
+        // console.log(error.response.data.message);
+        // if (
+        //   error.response.data.message == 'already exists' &&
+        //   error.response.data.message === 'already exists'
+        // ) {
+        //   Alert.alert('You Already Enrolled this Course');
+        // } 
+      });
+  };
   return (
     <SafeAreaView>
       <View>
@@ -85,6 +116,12 @@ export default function Batches({ navigation }) {
                 <ListItem.Title>{l.batch_name}</ListItem.Title>
                 <ListItem.Subtitle>{l.batch_description}</ListItem.Subtitle>
                 <ListItem.Subtitle>{l.start_time}</ListItem.Subtitle>
+              </ListItem.Content>
+              <ListItem.Content>
+                <ListItem.Title>
+                  <TouchableOpacity onPress={enrollNow} >
+              <Text style={styles.buttonText}>JOIN BATCH</Text>
+            </TouchableOpacity></ListItem.Title>
               </ListItem.Content>
             </ListItem>
           </TouchableOpacity>

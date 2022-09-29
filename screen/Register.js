@@ -25,6 +25,7 @@ export default function Register({ navigation }) {
   const [password, setPassword] = useState('');
   const [cpassword, setCpassword] = useState('');
   const [storeddata, setStoreddata] = useState('');
+  const [storeUser_type, setStoreUser_type] = useState('');
 
   // const [referral_code, setReferral_code] = useState('');
   const [users, setUsers] = useState('');
@@ -39,8 +40,9 @@ export default function Register({ navigation }) {
 
 
   const _storeData = async id => {
+    console.log("kya aya ?????",users,id);
     try {
-      await AsyncStorage.setItem('user_id', JSON.stringify(id));
+      await AsyncStorage.multiSet([['user_type',users],['user_id', JSON.stringify(id)]]);
       console.log('token saved success');
     } catch (error) {
       console.log('Some error in setting token');
@@ -49,10 +51,16 @@ export default function Register({ navigation }) {
   const getData = async () => {
     try {
       const user_id = await AsyncStorage.getItem('user_id');
+      const user_type = await AsyncStorage.getItem('user_type');
       if (user_id !== null) {
         console.log('success');
         console.log(user_id);
         setStoreddata(user_id);
+      }
+      if (user_type !== null) {
+        console.log('success');
+        console.log(user_type);
+        setStoreUser_type(user_type);
         navigation.replace('Home');
       }
     } catch (e) {
@@ -61,7 +69,7 @@ export default function Register({ navigation }) {
   };
   useEffect(() => {
     getData();
-  }, [storeddata]);
+  }, [storeddata,storeUser_type]);
   const signUp = (
     s_name,
     email,

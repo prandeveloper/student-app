@@ -179,7 +179,7 @@ export default function ProfileEdit({navigation}) {
     // data.append('Subject', selected);
     data.append('image', singleFile.assets[0].base64);
 
-    fetch(
+    fetch(  
       `https://edumatelive.in/studentadmin/newadmin/api/ApiCommonController/profileuser`,
       {
         method: 'post',

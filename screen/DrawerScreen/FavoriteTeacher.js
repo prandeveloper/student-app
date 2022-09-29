@@ -41,7 +41,7 @@ const FavoriteTeacher = ({navigation}) => {
   };
   const getBatch = async () => {
     axios
-      .get(`https://edumatelive.in/studentadmin/newadmin/api/ApiCommonController/teacherfavorite/${storeddata}`)
+      .get(`https://edumatelive.in/studentadmin/newadmin/api/ApiCommonController/favlistteacher/${storeddata}`)
       .then((response) => {
         console.log("<<<<<aa", response.data.data)
         const list = response.data.data
