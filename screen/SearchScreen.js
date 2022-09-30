@@ -66,6 +66,7 @@ export default function SearchScreen({ navigation }) {
                 onChangeText={onChangeSearch}
                 value={searchQuery}
             />
+            <ScrollView>
             <View >
                 {teacherList?.map((l, i) => (
                     <TouchableOpacity onPress={() =>
@@ -83,6 +84,7 @@ export default function SearchScreen({ navigation }) {
                     </TouchableOpacity>
                 ))}
             </View>
+            </ScrollView>
 
         </View>
     );

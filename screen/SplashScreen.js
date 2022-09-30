@@ -5,7 +5,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function SplashScreen({navigation}) {
   setTimeout(async () => {
-    const value = await AsyncStorage.getItem('user-token');
+    const value = await AsyncStorage.getItem('user_id');
     if (value !== null) {
       navigation.replace('Home');
     } else {

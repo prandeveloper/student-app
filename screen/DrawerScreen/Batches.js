@@ -22,6 +22,7 @@ export default function Batches({ navigation }) {
   const [endTime, setEndTime] = useState('');
   const [time, setTime] = useState('');
   const [storeddata, setStoreddata] = useState('');
+  const [storeUser_type, setStoreUser_type] = useState('');
   const [batchList, setBatchList] = useState([]);
   const [selectedLanguage, setSelectedLanguage] = useState('');
   const [batchId, setBatchId] = useState('');
@@ -48,9 +49,17 @@ export default function Batches({ navigation }) {
   const getData = async () => {
     try {
       const user_id = await AsyncStorage.getItem('user_id');
+      const user_type = await AsyncStorage.getItem('user_type');
       if (user_id !== null) {
-        console.log('@@@@@@@@', user_id);
+        console.log('success');
+        console.log(user_id);
         setStoreddata(user_id);
+      }
+      if (user_type !== null) {
+        console.log('success');
+        console.log('storeUser_type ????', user_type);
+        console.log('storeUser_type ????', storeUser_type);
+        setStoreUser_type(user_type);
       }
     } catch (e) {
       console.log('no Value in login');
@@ -58,12 +67,12 @@ export default function Batches({ navigation }) {
   };
   const getBatch = async () => {
     axios
-      .get(`https://edumatelive.in/studentadmin/newadmin/api/ApiCommonController/batchlistbyuserid/${storeddata}`)
+      .get(`https://edumatelive.in/studentadmin/newadmin/api/ApiCommonController/batchlistbyuserid`)
       .then((response) => {
         console.log("<<<<<aa", response.data.data)
         const list = response.data.data
         setBatchList(list)
-        console.log("????????????",list[0].id);
+        console.log("????????????", list[0].id);
         setBatchId(list[0].id)
       })
       .catch((error) => {
@@ -73,14 +82,14 @@ export default function Batches({ navigation }) {
   useEffect(() => {
     getData();
     getBatch();
-  }, [storeddata]);
+  }, [storeddata, storeUser_type]);
   const enrollNow = async () => {
     axios
       .post(
-        `https://edumatelive.in/studentadmin/newadmin/api/ApiCommonController/joinbatch`,{
-          user_id: await AsyncStorage.getItem('user_id'),
-          batch_id:batchId,
-        },
+        `https://edumatelive.in/studentadmin/newadmin/api/ApiCommonController/joinbatch`, {
+        user_id: await AsyncStorage.getItem('user_id'),
+        batch_id: batchId,
+      },
       )
       .then(response => {
         console.log(response.data);
@@ -103,10 +112,11 @@ export default function Batches({ navigation }) {
       });
   };
   return (
-    <SafeAreaView>
+    <SafeAreaView >
       <View>
         <CustomHeader title="Batches" navigation={navigation} />
       </View>
+      <ScrollView>
       <View >
         {batchList?.map((l, i) => (
           <TouchableOpacity  >
@@ -120,125 +130,23 @@ export default function Batches({ navigation }) {
               <ListItem.Content>
                 <ListItem.Title>
                   <TouchableOpacity onPress={enrollNow} >
-              <Text style={styles.buttonText}>JOIN BATCH</Text>
-            </TouchableOpacity></ListItem.Title>
+                    <Text style={styles.buttonText}>JOIN BATCH</Text>
+                  </TouchableOpacity></ListItem.Title>
               </ListItem.Content>
             </ListItem>
           </TouchableOpacity>
         ))}
       </View>
-      <ScrollView>
+      
         <View style={styles.mainContainer}>
-          {/* <View style={styles.date}>
-            <View style={styles.startText}>
-              <Text style={styles.dateText}>START DATE</Text>
-            </View>
-            <View style={styles.startDate}>
-              <DatePicker
-                style={{width: 180}}
-                date={date}
-                placeholder=""
-                format="DD-MM-YYYY"
-                confirmBtnText="Confirm"
-                cancelBtnText="Cancel"
-                onDateChange={d => setDate(d)}
-                customStyles={{
-                  dateIcon: {
-                    position: 'absolute',
-                    left: 0,
-                    right: 5,
-
-                    height: 18,
-                  },
-                  dateInput: {
-                    marginLeft: 5,
-                    borderWidth: 0,
-                    //borderBottomWidth: 2,
-                    marginBottom: 5,
-                  },
-                }}
-              />
-            </View>
-          </View>
-          <View style={styles.date}>
-            <View style={styles.startText}>
-              <Text style={styles.dateText}>END DATE</Text>
-            </View>
-            <View style={styles.startDate}>
-              <DatePicker
-                style={{width: 180}}
-                date={date}
-                placeholder=""
-                format="DD-MM-YYYY"
-                confirmBtnText="Confirm"
-                cancelBtnText="Cancel"
-                onDateChange={d => setDate(d)}
-                customStyles={{
-                  dateIcon: {
-                    position: 'absolute',
-                    left: 0,
-                    right: 5,
-
-                    height: 18,
-                  },
-                  dateInput: {
-                    marginLeft: 5,
-                    borderWidth: 0,
-                    //borderBottomWidth: 2,
-                    marginBottom: 5,
-                  },
-                }}
-              />
-            </View>
-          </View>
-          <View style={styles.date}>
-            <View style={styles.startText}>
-              <Text style={styles.dateText}>START TIME</Text>
-            </View>
-            <View style={styles.startDate}>
-              <TextInput
-                placeholder="End Time"
-                keyboardType="ascii-capable"
-                value={endTime}
-                onChange={setEndTime}
-              />
-            </View>
-          </View>
-          <View style={styles.date}>
-            <View style={styles.startText}>
-              <Text style={styles.dateText}>END TIME</Text>
-            </View>
-            <View style={styles.startDate}>
-              <TextInput
-                placeholder="End Time"
-                keyboardType="ascii-capable"
-                value={endTime}
-                onChange={setEndTime}
-              />
-            </View>
-          </View>
-          <View style={styles.date}>
-            <View style={styles.startText}>
-              <Text style={styles.dateText}>SUBJECT</Text>
-            </View>
-            <View style={styles.startDate}>
-              <Picker
-                style={{width: 200}}
-                selectedValue={selectedLanguage}
-                onValueChange={(itemValue, itemIndex) =>
-                  setSelectedLanguage(itemValue)
-                }>
-                <Picker.Item label="Java" value="java" />
-                <Picker.Item label="JavaScript" value="js" />
-                <Picker.Item label="English" value="english" />
-                <Picker.Item label="Hindi" value="hindi" />
-              </Picker>
-            </View>
-          </View> */}
           <View style={styles.buttonView}>
-            <TouchableOpacity style={styles.buttonTouch} onPress={() => navigation.navigate('BatchesForm')}>
-              <Text style={styles.buttonText}>ADD BATCH</Text>
-            </TouchableOpacity>
+            {console.log(storeUser_type==="Teacher"?'=<>>>>>>>true':'=>>>>>>>>>>>>false')}
+            {storeUser_type === 'Student' ? 
+              <View></View>
+          :<TouchableOpacity style={styles.buttonTouch} onPress={() => navigation.navigate('BatchesForm')}>
+          <Text style={styles.buttonText}>ADD BATCH</Text>
+        </TouchableOpacity>}
+
           </View>
         </View>
       </ScrollView>
@@ -268,11 +176,12 @@ const styles = StyleSheet.create({
     borderRadius: 15,
   },
   buttonView: {
-    marginVertical: 30,
+    marginVertical: 20,
   },
   buttonTouch: {
     justifyContent: 'center',
     alignItems: 'center',
+    marginBottom:40
   },
   buttonText: {
     backgroundColor: 'blue',

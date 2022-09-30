@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useCallback} from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   View,
   Text,
@@ -13,28 +13,29 @@ import {
 import axios from 'axios';
 import CheckBox from '@react-native-community/checkbox';
 import DatePicker from 'react-native-datepicker';
-import {useCamera} from 'react-native-camera-hooks';
+import { useCamera } from 'react-native-camera-hooks';
 import RNFS from 'react-native-fs';
-import {RNCamera} from 'react-native-camera';
+import { RNCamera } from 'react-native-camera';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {launchImageLibrary} from 'react-native-image-picker';
+import { launchImageLibrary } from 'react-native-image-picker';
 import CustomHeader from './header/CustomHeader';
 // import {MultiSelect} from 'react-native-element-dropdown';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import { MultiSelect } from 'react-native-element-dropdown';
 
 const DATA = [
-  {label: 'React Naive', value: '1'},
-  {label: 'Javascript', value: '2'},
-  {label: 'Laravel', value: '3'},
-  {label: 'PHP', value: '4'},
-  {label: 'jQuery', value: '5'},
-  {label: 'Bootstrap', value: '6'},
-  {label: 'HTML', value: '7'},
-  {label: 'CSS', value: '8'},
+  { label: 'React Naive', value: '1' },
+  { label: 'Javascript', value: '2' },
+  { label: 'Laravel', value: '3' },
+  { label: 'PHP', value: '4' },
+  { label: 'jQuery', value: '5' },
+  { label: 'Bootstrap', value: '6' },
+  { label: 'HTML', value: '7' },
+  { label: 'CSS', value: '8' },
 ];
 
-export default function ProfileEdit({navigation}) {
+export default function ProfileEdit({ navigation }) {
   const [user, setUser] = useState({});
   const [passwordSecured, setPasswordSecured] = useState(true);
   const [fullname, setFullname] = useState('');
@@ -52,6 +53,8 @@ export default function ProfileEdit({navigation}) {
   const [selected, setSelected] = useState([]);
   const [storeProfile, setStoreProfile] = useState('');
   const [showData, setShowData] = useState([]);
+  const [storeUser_type, setStoreUser_type] = useState('');
+
 
   const renderDataItem = item => {
     return (
@@ -83,9 +86,16 @@ export default function ProfileEdit({navigation}) {
   const getDataProfile = async () => {
     try {
       const user_id = await AsyncStorage.getItem('user_id');
+      const user_type = await AsyncStorage.getItem('user_type');
       if (user_id !== null) {
         console.log('@@@@@@@@', user_id);
         setStoreProfile(user_id);
+      }
+      if (user_type !== null) {
+        console.log('success');
+        console.log('storeUser_type ????', user_type);
+        console.log('storeUser_type ????', storeUser_type);
+        setStoreUser_type(user_type);
       }
     } catch (e) {
       console.log('no Value in login');
@@ -164,6 +174,8 @@ export default function ProfileEdit({navigation}) {
       password,
       education,
       selected,
+      city,
+      state,
     );
     const data = new FormData();
     data.append('s_name', fullname);
@@ -179,7 +191,7 @@ export default function ProfileEdit({navigation}) {
     // data.append('Subject', selected);
     data.append('image', singleFile.assets[0].base64);
 
-    fetch(  
+    fetch(
       `https://edumatelive.in/studentadmin/newadmin/api/ApiCommonController/profileuser`,
       {
         method: 'post',
@@ -202,159 +214,160 @@ export default function ProfileEdit({navigation}) {
   return (
     <View style={styles.container}>
       <CustomHeader title="PROFILE" navigation={navigation} />
-      <ScrollView>
-        <View>
-          <View style={styles.inputView}>
-            <Icon name="user" color="black" size={20} />
-            <TextInput
-              style={{paddingHorizontal: 12, flex: 1}}
-              placeholder="Full Name"
-              onChangeText={setFullname}
-              value={fullname}
-              textContentType="text"
-              placeholderTextColor={'#7A7A81'}
-              color="black"
-              keyboardType="default"
-            />
-          </View>
+      {storeUser_type === 'Student' ?
+        <ScrollView>
+          <View>
+            <View style={styles.inputView}>
+              <Icon name="user" color="black" size={20} />
+              <TextInput
+                style={{ paddingHorizontal: 12, flex: 1 }}
+                placeholder="Full Name"
+                onChangeText={setFullname}
+                value={fullname}
+                textContentType="text"
+                placeholderTextColor={'#7A7A81'}
+                color="black"
+                keyboardType="default"
+              />
+            </View>
 
-          <View style={styles.inputView}>
-            <Icon name="envelope" color="black" size={20} />
-            <TextInput
-              style={{paddingHorizontal: 12, flex: 1}}
-              placeholder="Email"
-              textContentType="Email"
-              onChangeText={setEmail}
-              value={email}
-              placeholderTextColor={'#7A7A81'}
-              color="black"
-              keyboardType="email-address"
-            />
-          </View>
+            <View style={styles.inputView}>
+              <Icon name="envelope" color="black" size={20} />
+              <TextInput
+                style={{ paddingHorizontal: 12, flex: 1 }}
+                placeholder="Email"
+                textContentType="Email"
+                onChangeText={setEmail}
+                value={email}
+                placeholderTextColor={'#7A7A81'}
+                color="black"
+                keyboardType="email-address"
+              />
+            </View>
 
-          <View style={styles.inputView}>
-            <Icon name="phone" color="black" size={20} />
-            <TextInput
-              style={{paddingHorizontal: 12, flex: 1}}
-              placeholder="Mobile"
-              textContentType="telephoneNumber"
-              onChangeText={setMobile}
-              value={mobile}
-              placeholderTextColor={'#7A7A81'}
-              color="black"
-              keyboardType="phone-pad"
-            />
-          </View>
+            <View style={styles.inputView}>
+              <Icon name="phone" color="black" size={20} />
+              <TextInput
+                style={{ paddingHorizontal: 12, flex: 1 }}
+                placeholder="Mobile"
+                textContentType="telephoneNumber"
+                onChangeText={setMobile}
+                value={mobile}
+                placeholderTextColor={'#7A7A81'}
+                color="black"
+                keyboardType="phone-pad"
+              />
+            </View>
 
-          <View style={styles.inputView}>
-            <Icon name="lock" color="black" size={20} />
-            <TextInput
-              style={{flex: 1, paddingHorizontal: 12}}
-              placeholder={'password'}
-              secureTextEntry={passwordSecured}
-              onChangeText={setPassword}
-              value={password}
-              textContentType="password"
-              placeholderTextColor={'#7A7A81'}
-              color="black"
-            />
-            <TouchableOpacity
-              style={{padding: 4}}
-              onPress={() => {
-                setPasswordSecured(!passwordSecured);
-              }}>
-              <Icon name="eye" color="black" size={20} />
-            </TouchableOpacity>
-          </View>
+            <View style={styles.inputView}>
+              <Icon name="lock" color="black" size={20} />
+              <TextInput
+                style={{ flex: 1, paddingHorizontal: 12 }}
+                placeholder={'password'}
+                secureTextEntry={passwordSecured}
+                onChangeText={setPassword}
+                value={password}
+                textContentType="password"
+                placeholderTextColor={'#7A7A81'}
+                color="black"
+              />
+              <TouchableOpacity
+                style={{ padding: 4 }}
+                onPress={() => {
+                  setPasswordSecured(!passwordSecured);
+                }}>
+                <Icon name="eye" color="black" size={20} />
+              </TouchableOpacity>
+            </View>
 
-          <View style={styles.inputView}>
-            <Icon name="lock" color="black" size={20} />
-            <TextInput
-              style={{flex: 1, paddingHorizontal: 12}}
-              placeholder={'confirm password'}
-              secureTextEntry={passwordSecured}
-              textContentType="password"
-              onChangeText={setConfirmPassword}
-              value={confirmPassword}
-              placeholderTextColor={'#7A7A81'}
-              color="black"
-            />
-            <TouchableOpacity
-              style={{padding: 4}}
-              onPress={() => {
-                setPasswordSecured(!passwordSecured);
-              }}>
-              <Icon name="eye" color="black" size={20} />
-            </TouchableOpacity>
-          </View>
-          <View style={styles.inputView}>
-            <Icon name="vcard" color="black" size={20} />
-            <TextInput
-              style={{paddingHorizontal: 12, flex: 1}}
-              placeholder="Area"
-              textContentType="Email"
-              onChangeText={setAddress}
-              value={address}
-              placeholderTextColor={'#7A7A81'}
-              color="black"
-              keyboardType="email-address"
-            />
-          </View>
-          <View style={styles.inputView}>
-            <Icon name="vcard" color="black" size={20} />
-            <TextInput
-              style={{paddingHorizontal: 12, flex: 1}}
-              placeholder="State"
-              textContentType="Email"
-              onChangeText={setState}
-              value={state}
-              placeholderTextColor={'#7A7A81'}
-              color="black"
-              keyboardType="email-address"
-            />
-          </View>
-          <View style={styles.inputView}>
-            <Icon name="vcard" color="black" size={20} />
-            <TextInput
-              style={{paddingHorizontal: 12, flex: 1}}
-              placeholder="City"
-              textContentType="Email"
-              onChangeText={setCity}
-              value={city}
-              placeholderTextColor={'#7A7A81'}
-              color="black"
-              keyboardType="email-address"
-            />
-          </View>
-          <View style={styles.inputView}>
-            <Icon name="vcard" color="black" size={20} />
-            <TextInput
-              style={{paddingHorizontal: 12, flex: 1}}
-              placeholder="experience"
-              textContentType="Email"
-              onChangeText={setExperience}
-              value={experience}
-              placeholderTextColor={'#7A7A81'}
-              color="black"
-              keyboardType="email-address"
-            />
-          </View>
-          <View style={styles.inputView}>
-            <Icon name="vcard" color="black" size={20} />
-            <TextInput
-              style={{paddingHorizontal: 12, flex: 1}}
-              placeholder="Education"
-              textContentType="Email"
-              onChangeText={setEducation}
-              value={education}
-              placeholderTextColor={'#7A7A81'}
-              color="black"
-              keyboardType="email-address"
-            />
-          </View>
-          <View style={styles.inputView1}>
-            {/* <Icon name="vcard" color="black" size={20} /> */}
-            {/* <View style={{width: '100%', marginTop: 20}}>
+            <View style={styles.inputView}>
+              <Icon name="lock" color="black" size={20} />
+              <TextInput
+                style={{ flex: 1, paddingHorizontal: 12 }}
+                placeholder={'confirm password'}
+                secureTextEntry={passwordSecured}
+                textContentType="password"
+                onChangeText={setConfirmPassword}
+                value={confirmPassword}
+                placeholderTextColor={'#7A7A81'}
+                color="black"
+              />
+              <TouchableOpacity
+                style={{ padding: 4 }}
+                onPress={() => {
+                  setPasswordSecured(!passwordSecured);
+                }}>
+                <Icon name="eye" color="black" size={20} />
+              </TouchableOpacity>
+            </View>
+            <View style={styles.inputView}>
+              <Icon name="vcard" color="black" size={20} />
+              <TextInput
+                style={{ paddingHorizontal: 12, flex: 1 }}
+                placeholder="Area"
+                textContentType="Email"
+                onChangeText={setAddress}
+                value={address}
+                placeholderTextColor={'#7A7A81'}
+                color="black"
+                keyboardType="email-address"
+              />
+            </View>
+            <View style={styles.inputView}>
+              <Icon name="vcard" color="black" size={20} />
+              <TextInput
+                style={{ paddingHorizontal: 12, flex: 1 }}
+                placeholder="State"
+                textContentType="Email"
+                onChangeText={setState}
+                value={state}
+                placeholderTextColor={'#7A7A81'}
+                color="black"
+                keyboardType="email-address"
+              />
+            </View>
+            <View style={styles.inputView}>
+              <Icon name="vcard" color="black" size={20} />
+              <TextInput
+                style={{ paddingHorizontal: 12, flex: 1 }}
+                placeholder="City"
+                textContentType="Email"
+                onChangeText={setCity}
+                value={city}
+                placeholderTextColor={'#7A7A81'}
+                color="black"
+                keyboardType="email-address"
+              />
+            </View>
+            {/* <View style={styles.inputView}>
+              <Icon name="vcard" color="black" size={20} />
+              <TextInput
+                style={{ paddingHorizontal: 12, flex: 1 }}
+                placeholder="experience"
+                textContentType="Email"
+                onChangeText={setExperience}
+                value={experience}
+                placeholderTextColor={'#7A7A81'}
+                color="black"
+                keyboardType="email-address"
+              />
+            </View>
+            <View style={styles.inputView}>
+              <Icon name="vcard" color="black" size={20} />
+              <TextInput
+                style={{ paddingHorizontal: 12, flex: 1 }}
+                placeholder="Education"
+                textContentType="Email"
+                onChangeText={setEducation}
+                value={education}
+                placeholderTextColor={'#7A7A81'}
+                color="black"
+                keyboardType="email-address"
+              />
+            </View> */}
+            <View style={styles.inputView1}>
+              {/* <Icon name="vcard" color="black" size={20} /> */}
+              {/* <View style={{width: '100%', marginTop: 20}}>
               <MultiSelect
                 style={styles.dropdown}
                 placeholderStyle={styles.placeholderStyle}
@@ -392,38 +405,264 @@ export default function ProfileEdit({navigation}) {
                 )}
               />
             </View> */}
+            </View>
+            <View style={styles.imagetext}>
+              <Text style={styles.textimage}>Upload Image</Text>
+            </View>
+            <View style={styles.inputImage}>
+              <View style={styles.inputimage1}>
+                <TouchableOpacity style={{ padding: 4 }} onPress={chooseFrontFile}>
+                  <Icon name="camera" color="black" size={20} />
+                </TouchableOpacity>
+              </View>
+              {singleFile != '' &&
+                singleFile != undefined &&
+                singleFile != null ? (
+                <View style={styles.inputimage2}>
+                  <Text style={{ color: 'black' }}>
+                    {singleFile.assets[0].fileName}
+                  </Text>
+                </View>
+              ) : (
+                <View style={styles.inputimage2}>
+                  <Text style={{ color: 'black' }}>Upload Image</Text>
+                </View>
+              )}
+            </View>
+            <TouchableOpacity style={styles.logbut} onPress={editProfile}>
+              <Text style={{ fontSize: 20, fontWeight: 'bold', color: 'white' }}>
+                Update
+              </Text>
+            </TouchableOpacity>
           </View>
-          <View style={styles.imagetext}>
-            <Text style={styles.textimage}>Upload Image</Text>
-          </View>
-          <View style={styles.inputImage}>
-            <View style={styles.inputimage1}>
-              <TouchableOpacity style={{padding: 4}} onPress={chooseFrontFile}>
-                <Icon name="camera" color="black" size={20} />
+          <Text>{'\n'}</Text>
+        </ScrollView>
+
+        :
+
+        <ScrollView>
+          <View>
+            <View style={styles.inputView}>
+              <Icon name="user" color="black" size={20} />
+              <TextInput
+                style={{ paddingHorizontal: 12, flex: 1 }}
+                placeholder="Full Name"
+                onChangeText={setFullname}
+                value={fullname}
+                textContentType="text"
+                placeholderTextColor={'#7A7A81'}
+                color="black"
+                keyboardType="default"
+              />
+            </View>
+
+            <View style={styles.inputView}>
+              <Icon name="envelope" color="black" size={20} />
+              <TextInput
+                style={{ paddingHorizontal: 12, flex: 1 }}
+                placeholder="Email"
+                textContentType="Email"
+                onChangeText={setEmail}
+                value={email}
+                placeholderTextColor={'#7A7A81'}
+                color="black"
+                keyboardType="email-address"
+              />
+            </View>
+
+            <View style={styles.inputView}>
+              <Icon name="phone" color="black" size={20} />
+              <TextInput
+                style={{ paddingHorizontal: 12, flex: 1 }}
+                placeholder="Mobile"
+                textContentType="telephoneNumber"
+                onChangeText={setMobile}
+                value={mobile}
+                placeholderTextColor={'#7A7A81'}
+                color="black"
+                keyboardType="phone-pad"
+              />
+            </View>
+
+            <View style={styles.inputView}>
+              <Icon name="lock" color="black" size={20} />
+              <TextInput
+                style={{ flex: 1, paddingHorizontal: 12 }}
+                placeholder={'password'}
+                secureTextEntry={passwordSecured}
+                onChangeText={setPassword}
+                value={password}
+                textContentType="password"
+                placeholderTextColor={'#7A7A81'}
+                color="black"
+              />
+              <TouchableOpacity
+                style={{ padding: 4 }}
+                onPress={() => {
+                  setPasswordSecured(!passwordSecured);
+                }}>
+                <Icon name="eye" color="black" size={20} />
               </TouchableOpacity>
             </View>
-            {singleFile != '' &&
-            singleFile != undefined &&
-            singleFile != null ? (
-              <View style={styles.inputimage2}>
-                <Text style={{color: 'black'}}>
-                  {singleFile.assets[0].fileName}
-                </Text>
+
+            <View style={styles.inputView}>
+              <Icon name="lock" color="black" size={20} />
+              <TextInput
+                style={{ flex: 1, paddingHorizontal: 12 }}
+                placeholder={'confirm password'}
+                secureTextEntry={passwordSecured}
+                textContentType="password"
+                onChangeText={setConfirmPassword}
+                value={confirmPassword}
+                placeholderTextColor={'#7A7A81'}
+                color="black"
+              />
+              <TouchableOpacity
+                style={{ padding: 4 }}
+                onPress={() => {
+                  setPasswordSecured(!passwordSecured);
+                }}>
+                <Icon name="eye" color="black" size={20} />
+              </TouchableOpacity>
+            </View>
+            <View style={styles.inputView}>
+              <Icon name="vcard" color="black" size={20} />
+              <TextInput
+                style={{ paddingHorizontal: 12, flex: 1 }}
+                placeholder="Area"
+                textContentType="Email"
+                onChangeText={setAddress}
+                value={address}
+                placeholderTextColor={'#7A7A81'}
+                color="black"
+                keyboardType="email-address"
+              />
+            </View>
+            <View style={styles.inputView}>
+              <Icon name="vcard" color="black" size={20} />
+              <TextInput
+                style={{ paddingHorizontal: 12, flex: 1 }}
+                placeholder="State"
+                textContentType="Email"
+                onChangeText={setState}
+                value={state}
+                placeholderTextColor={'#7A7A81'}
+                color="black"
+                keyboardType="email-address"
+              />
+            </View>
+            <View style={styles.inputView}>
+              <Icon name="vcard" color="black" size={20} />
+              <TextInput
+                style={{ paddingHorizontal: 12, flex: 1 }}
+                placeholder="City"
+                textContentType="Email"
+                onChangeText={setCity}
+                value={city}
+                placeholderTextColor={'#7A7A81'}
+                color="black"
+                keyboardType="email-address"
+              />
+            </View>
+            <View style={styles.inputView}>
+              <Icon name="vcard" color="black" size={20} />
+              <TextInput
+                style={{ paddingHorizontal: 12, flex: 1 }}
+                placeholder="experience"
+                textContentType="Email"
+                onChangeText={setExperience}
+                value={experience}
+                placeholderTextColor={'#7A7A81'}
+                color="black"
+                keyboardType="email-address"
+              />
+            </View>
+            <View style={styles.inputView}>
+              <Icon name="vcard" color="black" size={20} />
+              <TextInput
+                style={{ paddingHorizontal: 12, flex: 1 }}
+                placeholder="Education"
+                textContentType="Email"
+                onChangeText={setEducation}
+                value={education}
+                placeholderTextColor={'#7A7A81'}
+                color="black"
+                keyboardType="email-address"
+              />
+            </View>
+            <View style={styles.inputView1}>
+              {/* <Icon name="vcard" color="black" size={20} /> */}
+              <View style={{ width: '100%', marginTop: 20 }}>
+                <MultiSelect
+                  style={styles.dropdown}
+                  placeholderStyle={styles.placeholderStyle}
+                  selectedTextStyle={styles.selectedTextStyle}
+                  inputSearchStyle={styles.inputSearchStyle}
+                  iconStyle={styles.iconStyle}
+                  data={showData}
+                  labelField="subject_name"
+                  valueField="value"
+                  placeholder="Select Subject"
+                  value={selected}
+                  search
+                  searchPlaceholder="Search..."
+                  onChange={item => {
+                    setSelected(item);
+                  }}
+                  renderLeftIcon={() => (
+                    <AntDesign
+                      style={styles.icon}
+                      color="black"
+                      name="Safety"
+                      size={20}
+                    />
+                  )}
+                  renderItem={renderDataItem}
+                  renderSelectedItem={(item, unSelect) => (
+                    <TouchableOpacity onPress={() => unSelect && unSelect(item)}>
+                      <View style={styles.selectedStyle}>
+                        <Text style={styles.textSelectedStyle}>
+                          {item.subject_name}
+                        </Text>
+                        <AntDesign color="black" name="delete" size={17} />
+                      </View>
+                    </TouchableOpacity>
+                  )}
+                />
               </View>
-            ) : (
-              <View style={styles.inputimage2}>
-                <Text style={{color: 'black'}}>Upload Image</Text>
+            </View>
+            <View style={styles.imagetext}>
+              <Text style={styles.textimage}>Upload Image</Text>
+            </View>
+            <View style={styles.inputImage}>
+              <View style={styles.inputimage1}>
+                <TouchableOpacity style={{ padding: 4 }} onPress={chooseFrontFile}>
+                  <Icon name="camera" color="black" size={20} />
+                </TouchableOpacity>
               </View>
-            )}
+              {singleFile != '' &&
+                singleFile != undefined &&
+                singleFile != null ? (
+                <View style={styles.inputimage2}>
+                  <Text style={{ color: 'black' }}>
+                    {singleFile.assets[0].fileName}
+                  </Text>
+                </View>
+              ) : (
+                <View style={styles.inputimage2}>
+                  <Text style={{ color: 'black' }}>Upload Image</Text>
+                </View>
+              )}
+            </View>
+            <TouchableOpacity style={styles.logbut} onPress={editProfile}>
+              <Text style={{ fontSize: 20, fontWeight: 'bold', color: 'white' }}>
+                Update
+              </Text>
+            </TouchableOpacity>
           </View>
-          <TouchableOpacity style={styles.logbut} onPress={editProfile}>
-            <Text style={{fontSize: 20, fontWeight: 'bold', color: 'white'}}>
-              Update
-            </Text>
-          </TouchableOpacity>
-        </View>
-        <Text>{'\n'}</Text>
-      </ScrollView>
+          <Text>{'\n'}</Text>
+        </ScrollView>
+      }
     </View>
   );
 }

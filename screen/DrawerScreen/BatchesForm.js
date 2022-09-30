@@ -144,7 +144,7 @@ export default function BatchesForm({ navigation }) {
             </View>
             <View style={styles.startDate}>
               <TextInput
-                placeholder="End Time"
+                placeholder="Start Time"
                 keyboardType="ascii-capable"
                 value={time}
                 onChangeText={setTime}
