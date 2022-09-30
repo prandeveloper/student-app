@@ -26,13 +26,11 @@ export default function Register({ navigation }) {
   const [cpassword, setCpassword] = useState('');
   const [storeddata, setStoreddata] = useState('');
   const [storeUser_type, setStoreUser_type] = useState('');
-
-  // const [referral_code, setReferral_code] = useState('');
   const [users, setUsers] = useState('');
 
   const [language] = useState(
     [
-      'Studenet',
+      'Student',
       'Teacher',
       'Both',
     ].sort()
