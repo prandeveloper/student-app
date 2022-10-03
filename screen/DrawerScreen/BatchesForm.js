@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Picker } from '@react-native-picker/picker';
 import axios from 'axios';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -15,6 +15,20 @@ import {
 } from 'react-native';
 import DatePicker from 'react-native-datepicker';
 import CustomHeader from '../header/CustomHeader';
+import { MultiSelect } from 'react-native-element-dropdown';
+import AntDesign from 'react-native-vector-icons/AntDesign';
+
+
+const data = [
+  { label: 'Item 1', value: '1' },
+  { label: 'Item 2', value: '2' },
+  { label: 'Item 3', value: '3' },
+  { label: 'Item 4', value: '4' },
+  { label: 'Item 5', value: '5' },
+  { label: 'Item 6', value: '6' },
+  { label: 'Item 7', value: '7' },
+  { label: 'Item 8', value: '8' },
+];
 
 export default function BatchesForm({ navigation }) {
   const [date, setDate] = useState('');
@@ -24,6 +38,7 @@ export default function BatchesForm({ navigation }) {
   const [description, setDescription] = useState('');
   const [batchName, setBatchName] = useState('');
   const [selectedLanguage, setSelectedLanguage] = useState('');
+  const [selected, setSelected] = useState([]);
 
   const AddBatch = async () => {
     console.log('data.....',date,end_date,time,endTime,selectedLanguage,batchName,description);
@@ -68,6 +83,21 @@ export default function BatchesForm({ navigation }) {
   //     Alert("An error has occurred");
   //   }
   // }
+  useEffect(() => {
+    const getStudentData = () => {
+      axios
+        .get(`https://edumatelive.in/studentadmin/newadmin/api/ApiCommonController/studentbyid`)
+        .then(response => {
+          console.log(response.data);
+          const terms = response.data;
+          setStudentList(terms);
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    };
+    getStudentData();
+  }, []);
 
   return (
     <SafeAreaView>
@@ -208,6 +238,39 @@ export default function BatchesForm({ navigation }) {
               </Picker>
             </View>
           </View>
+          <View style={styles.date}>
+            <View style={styles.startText}>
+              <Text style={styles.dateText}>STUDENT LIST</Text>
+            </View>
+            <View style={styles.startDates}>
+            <MultiSelect
+          style={styles.dropdown}
+          placeholderStyle={styles.placeholderStyle}
+          selectedTextStyle={styles.selectedTextStyle}
+          inputSearchStyle={styles.inputSearchStyle}
+          iconStyle={styles.iconStyle}
+          search
+          data={data}
+          labelField="label"
+          valueField="value"
+          placeholder="Select item"
+          searchPlaceholder="Search..."
+          value={selected}
+          onChange={item => {
+            setSelected(item);
+          }}
+          renderLeftIcon={() => (
+            <AntDesign
+              style={styles.icon}
+              color="black"
+              name="Safety"
+              size={20}
+            />
+          )}
+          selectedStyle={styles.selectedStyle}
+        />
+            </View>
+          </View>
           <View style={styles.buttonView}>
             <TouchableOpacity style={styles.buttonTouch} onPress={AddBatch} >
               <Text style={styles.buttonText}>ADD BATCH</Text>
@@ -240,6 +303,13 @@ const styles = StyleSheet.create({
     marginHorizontal: 15,
     borderRadius: 15,
   },
+  startDates: {
+    backgroundColor: 'silver',
+    flex: 2,
+    borderWidth: 1,
+    marginHorizontal: 15,
+    borderRadius: 15,
+  },
   buttonView: {
     marginVertical: 30,
   },
@@ -254,5 +324,31 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 15,
     borderRadius: 10,
+  },
+  dropdown: {
+    height: 50,
+    backgroundColor: 'transparent',
+    borderBottomColor: 'gray',
+    borderBottomWidth: 0.5,
+  },
+  placeholderStyle: {
+    fontSize: 16,
+  },
+  selectedTextStyle: {
+    fontSize: 14,
+  },
+  iconStyle: {
+    width: 20,
+    height: 20,
+  },
+  inputSearchStyle: {
+    height: 40,
+    fontSize: 16,
+  },
+  icon: {
+    marginRight: 5,
+  },
+  selectedStyle: {
+    borderRadius: 12,
   },
 });

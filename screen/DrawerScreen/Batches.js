@@ -67,7 +67,7 @@ export default function Batches({ navigation }) {
   };
   const getBatch = async () => {
     axios
-      .get(`https://edumatelive.in/studentadmin/newadmin/api/ApiCommonController/batchlistbyuserid`)
+      .get(`https://edumatelive.in/studentadmin/newadmin/api/ApiCommonController/batchlist11/${storeddata}`)
       .then((response) => {
         console.log("<<<<<aa", response.data.data)
         const list = response.data.data
@@ -128,10 +128,10 @@ export default function Batches({ navigation }) {
                 <ListItem.Subtitle>{l.start_time}</ListItem.Subtitle>
               </ListItem.Content>
               <ListItem.Content>
-                <ListItem.Title>
+                {/* <ListItem.Title>
                   <TouchableOpacity onPress={enrollNow} >
                     <Text style={styles.buttonText}>JOIN BATCH</Text>
-                  </TouchableOpacity></ListItem.Title>
+                  </TouchableOpacity></ListItem.Title> */}
               </ListItem.Content>
             </ListItem>
           </TouchableOpacity>

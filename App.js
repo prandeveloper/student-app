@@ -50,6 +50,9 @@ import SearchScreen from './screen/SearchScreen';
 import TeacherDetails from './screen/TeacherDetails';
 import StudentDetails from './screen/StudentDetails';
 import SearchDetails from './screen/SearchDetails';
+import ForgotPassword from './screen/ForgotPassword';
+import OtpScreen from './screen/OtpScreen';
+import ConfirnPassword from './screen/ConfirnPassword';
 //import Profile from "./src/profile.png";
 
 const Tab = createBottomTabNavigator();
@@ -278,6 +281,21 @@ const TabNavigation = ({navigation}) => {
       <Stack.Screen
         name="SearchDetails"
         component={SearchDetails}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="ForgotPassword"
+        component={ForgotPassword}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="OtpScreen"
+        component={OtpScreen}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="ConfirnPassword"
+        component={ConfirnPassword}
         options={{headerShown: false}}
       />
     </Stack.Navigator>

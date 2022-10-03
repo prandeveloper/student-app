@@ -14,19 +14,23 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {TextInput, TouchableOpacity} from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Picker } from '@react-native-picker/picker';
+import OTPInputView from '@twotalltotems/react-native-otp-input';
+
 
 
 import HomeScreen from './HomeScreen';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
-export default function LogIn({navigation}) {
+export default function OtpScreen({navigation}) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [storeddata, setStoreddata] = useState('');
   const [passwordSecured, setPasswordSecured] = useState(true);
   const [users, setUsers] = useState('');
   const [storeUser_type, setStoreUser_type] = useState('');
+  const [code, setCode] = useState('');
+
 
   
 
@@ -42,44 +46,12 @@ export default function LogIn({navigation}) {
     ToastAndroid.show('Wrong Email or Password', ToastAndroid.SHORT);
   }
 
-  const _storeData = async id => {
-    console.log("kya aya ?????",users,id);
-    try {
-      await AsyncStorage.multiSet([['user_type',users],['user_id', JSON.stringify(id)]]);
-      console.log('token saved success');
-    } catch (error) {
-      console.log('Some error in setting token');
-    }
-  };
-  const getData = async () => {
-    try {
-      const user_id = await AsyncStorage.getItem('user_id');
-      const user_type = await AsyncStorage.getItem('user_type');
-      if (user_id !== null) {
-        console.log('success');
-        console.log(user_id);
-        setStoreddata(user_id);
-      }
-      if (user_type !== null) {
-        console.log('success');
-        console.log(user_type);
-        setStoreUser_type(user_type);
-        navigation.replace('Home');
-      }
-    } catch (e) {
-      console.log('no Value in login');
-    }
-  };
-  useEffect(() => {
-    getData();
-  }, [storeddata,storeUser_type]);
-  const signIn = (email, password,users) => {
-    console.log(email, password,users);
+  const signIn = (email,code) => {
+    console.log(email,code);
     axios
-      .post(`https://edumatelive.in/studentadmin/newadmin/api/ApiCommonController/user_loginbypassword`, {
+      .post(` https://edumatelive.in/studentadmin/newadmin/api/ApiCommonController/verify_Forgot_otp`, {
         email: email,
-        password: password,
-        users:users
+        otp: code,
       })
       .then(function (response) {
         console.log(response.data);
@@ -88,11 +60,10 @@ export default function LogIn({navigation}) {
           ToastAndroid.show('Login Successfull....', ToastAndroid.SHORT);
         }
 
-        console.log(response.data.data.id);
+        console.log(response.data);
 
-        if (response.data.data.id != null) {
-          _storeData(response.data.data.id);
-          navigation.replace('Home');
+        if (response.data != null) {
+          navigation.replace('ConfirnPassword');
         } else {
           console.log('no id!');
         }
@@ -124,7 +95,7 @@ export default function LogIn({navigation}) {
               fontWeight: 'bold',
               color: 'black',
             }}>
-            Sign In
+           Enter Otp
           </Text>
         </View>
         <Text
@@ -153,41 +124,18 @@ export default function LogIn({navigation}) {
             fontWeight: 'bold',
           }}></Text>
         <View style={styles.inputView}>
-          <Icon name="lock" color="black" size={20} />
-          <TextInput
-            style={{flex: 1, paddingHorizontal: 12}}
-            placeholder={'password'}
-            secureTextEntry={passwordSecured}
-            onChangeText={setPassword}
-            value={password}
-            placeholderTextColor="#003f5c"
-            color="black"
-          />
-          <TouchableOpacity
-            style={{padding: 4}}
-            onPress={() => {
-              setPasswordSecured(!passwordSecured);
-            }}>
-            <Icon name="eye" color="black" size={20} />
-          </TouchableOpacity>
-        </View>
-        <View  style={{ width: '90%',
-    height: 55,
-    backgroundColor: '#f1f3f6',justifyContent:'center',alignSelf:'center',marginTop:15,marginLeft:5}}>
-          {/* <Icon name="lock" color="black" size={20} /> */}
-          <Picker
-            selectedValue={users}
-            onValueChange={(itemVal) => {
-              setUsers(itemVal);
-            }}
-          >
-            {
-              language.map((l) => (
-                <Picker.Item label={l} value={l} style={{ color: 'black' }} />
-              ))
-            }
-
-          </Picker>
+          {/* <Icon name="envelope" color="black" size={20} /> */}
+          <OTPInputView
+                  style={{width: '100%', height: 50}}
+                  onCodeChanged={setCode}
+                  pinCount={6}
+                  autoFocusOnLoad
+                  codeInputFieldStyle={styles.underlineStyleBase}
+                  codeInputHighlightStyle={styles.underlineStyleHighLighted}
+                  onCodeFilled={code => {
+                    console.log(`Code is ${code}, you are good to go!`);
+                  }}
+                />
         </View>
        
         <Text>{'\n'}</Text>
@@ -198,7 +146,7 @@ export default function LogIn({navigation}) {
           <TouchableOpacity
             style={styles.logbut}
             onPress={() => {
-              signIn(email, password,users);
+              signIn(email,code);
             }}>
             <Text style={{fontSize: 20, fontWeight: 'bold', color: 'white'}}>
               Submit
@@ -206,7 +154,7 @@ export default function LogIn({navigation}) {
           </TouchableOpacity>
         </View>
       </View>
-      <View style={{}}>
+      {/* <View style={{}}>
         <TouchableOpacity
           style={{
             alignItems: 'center',
@@ -223,13 +171,13 @@ export default function LogIn({navigation}) {
           </Text>
         </TouchableOpacity>
         <View>
-        <TouchableOpacity onPress={()=> navigation.navigate('ForgotPassword')} >
+        <TouchableOpacity>
         <Text style={{color: '#333', fontWeight: 'bold', fontSize: 15,alignSelf:'center'}}>
             forgot password
           </Text>
         </TouchableOpacity>
         </View>
-      </View>
+      </View> */}
     </ScrollView>
   );
 }
@@ -269,5 +217,19 @@ const styles = StyleSheet.create({
     shadowColor: 'black',
     shadowOpacity: 10,
     elevation: 10,
+  },
+  underlineStyleBase: {
+    width: 40,
+    height: 45,
+    borderWidth: 0,
+    borderWidth: 2,
+    borderRadius: 5,
+    color: '#333',
+    fontFamily: 'Roboto-Medium',
+    borderColor: '#333',
+  },
+
+  underlineStyleHighLighted: {
+    color: '#333',
   },
 });
