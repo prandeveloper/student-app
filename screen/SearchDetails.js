@@ -7,6 +7,7 @@ import {
     Button,
     StyleSheet,
     Alert,
+    ToastAndroid,
   } from 'react-native';
   import React, {useState, useEffect} from 'react';
   import {SafeAreaView} from 'react-native-safe-area-context';
@@ -96,6 +97,11 @@ import {
         )
         .then(response => {
           console.log(response.data);
+          if (response.data !==null) {
+            ToastAndroid.show('Sucess full',2000)
+          } else {
+            Alert.alert("error.");
+          }
           // if (
           //   response.data.message == 'success' &&
           //   response.data.message === 'success'
