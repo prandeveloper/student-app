@@ -78,7 +78,7 @@ export default function BatchesForm({ navigation }) {
       .then(response => {
         console.log('@@@@@', response.data);
         if (response.data !==null) {
-          ToastAndroid.show('This is a toast',2000)
+          ToastAndroid.show('Sucess full create Batch',2000)
         } else {
           Alert.alert("error.");
         }

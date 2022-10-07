@@ -4,7 +4,7 @@ import axios from 'axios';
 import React, { Component } from 'react';
 import { useState } from 'react';
 import { useEffect } from 'react';
-import { View, Text, StyleSheet, Image,TouchableOpacity,Button } from 'react-native';
+import { View, Text, StyleSheet, Image,TouchableOpacity,Button, ToastAndroid } from 'react-native';
 import NotifyHeader from './header/NotifyHeader';
 
 // create a component
@@ -37,6 +37,11 @@ const StudentDetails = ({route,navigation}) => {
       )
       .then(response => {
         console.log(response.data);
+        if (response.data !==null) {
+          ToastAndroid.show('Sucess full',2000)
+        } else {
+          Alert.alert("error.");
+        }
         // if (
         //   response.data.message == 'success' &&
         //   response.data.message === 'success'

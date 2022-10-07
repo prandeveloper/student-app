@@ -7,6 +7,7 @@ import {
   Button,
   StyleSheet,
   Alert,
+  ToastAndroid,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
@@ -106,6 +107,11 @@ export default function HomeDetails({route, navigation}) {
       })
       .catch(error => {
         console.log('####', error.response);
+        if (response.data !==null) {
+          ToastAndroid.show('Sucess full',2000)
+        } else {
+          Alert.alert("error.");
+        }
         // console.log(error.response.data.message);
         // if (
         //   error.response.data.message == 'already exists' &&
