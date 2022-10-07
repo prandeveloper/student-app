@@ -12,6 +12,7 @@ import {
   TouchableOpacity,
   ScrollView,
   Alert,
+  ToastAndroid,
 } from 'react-native';
 import DatePicker from 'react-native-datepicker';
 import CustomHeader from '../header/CustomHeader';
@@ -38,10 +39,30 @@ export default function BatchesForm({ navigation }) {
   const [description, setDescription] = useState('');
   const [batchName, setBatchName] = useState('');
   const [selectedLanguage, setSelectedLanguage] = useState('');
-  const [selected, setSelected] = useState([]);
+  const [selected, setSelected] = useState('');
+  const [studentLists, setStudentLists] = useState([]);
+
+
+  const getDropData = async () => {
+    axios
+      .get(
+        'https://edumatelive.in/studentadmin/newadmin/api/ApiCommonController/studentbyid',
+      )
+      .then(response => {
+        console.log("drop data//////",response.data.data);
+        const list = response.data.data;
+        setStudentLists(list)
+      })
+      .catch(error => {
+        console.log(error.response);
+      });
+  };
+  useEffect(() => {
+    getDropData();
+  }, []);
 
   const AddBatch = async () => {
-    console.log('data.....',date,end_date,time,endTime,selectedLanguage,batchName,description);
+    console.log('data.....',date,end_date,time,endTime,selectedLanguage,batchName,description,selected);
     axios
       .post(`https://edumatelive.in/studentadmin/newadmin/api/ApiCommonController/postbatch`, {
         start_date: date,
@@ -51,15 +72,16 @@ export default function BatchesForm({ navigation }) {
         subject: selectedLanguage,
         batch_name:batchName,
         batch_description:description,
+        student_id: JSON.stringify(selected),
         user_id: await AsyncStorage.getItem('user_id')
       })
       .then(response => {
         console.log('@@@@@', response.data);
-        // if (response.data.message === "data Send successfully.") {
-        //   setModalVisible(true)
-        // } else {
-        //   Alert.alert("error.");
-        // }
+        if (response.data !==null) {
+          ToastAndroid.show('This is a toast',2000)
+        } else {
+          Alert.alert("error.");
+        }
       })
       .catch(error => {
         console.log(error);
@@ -83,24 +105,9 @@ export default function BatchesForm({ navigation }) {
   //     Alert("An error has occurred");
   //   }
   // }
-  useEffect(() => {
-    const getStudentData = () => {
-      axios
-        .get(`https://edumatelive.in/studentadmin/newadmin/api/ApiCommonController/studentbyid`)
-        .then(response => {
-          console.log(response.data);
-          const terms = response.data;
-          setStudentList(terms);
-        })
-        .catch(error => {
-          console.log(error);
-        });
-    };
-    getStudentData();
-  }, []);
 
   return (
-    <SafeAreaView>
+    <SafeAreaView style={{flex:1}} >
       <View>
         <CustomHeader title="Batches" navigation={navigation} />
       </View>
@@ -250,9 +257,9 @@ export default function BatchesForm({ navigation }) {
           inputSearchStyle={styles.inputSearchStyle}
           iconStyle={styles.iconStyle}
           search
-          data={data}
-          labelField="label"
-          valueField="value"
+          data={studentLists}
+          labelField="s_name"
+          valueField="s_name"
           placeholder="Select item"
           searchPlaceholder="Search..."
           value={selected}
@@ -311,7 +318,7 @@ const styles = StyleSheet.create({
     borderRadius: 15,
   },
   buttonView: {
-    marginVertical: 30,
+    marginBottom:10
   },
   buttonTouch: {
     justifyContent: 'center',

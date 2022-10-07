@@ -67,7 +67,7 @@ export default function Batches({ navigation }) {
   };
   const getBatch = async () => {
     axios
-      .get(`https://edumatelive.in/studentadmin/newadmin/api/ApiCommonController/batchlist11/${storeddata}`)
+      .get(`https://edumatelive.in/studentadmin/newadmin/api/ApiCommonController/batchlistbyuserid`)
       .then((response) => {
         console.log("<<<<<aa", response.data.data)
         const list = response.data.data
@@ -119,19 +119,19 @@ export default function Batches({ navigation }) {
       <ScrollView>
       <View >
         {batchList?.map((l, i) => (
-          <TouchableOpacity  >
+          <TouchableOpacity style={{width:'100%'}}   >
             <ListItem key={i} bottomDivider style={{ marginBottom: 10 }}>
-              {/* <Avatar source={{ uri: l.avatar_url }} /> */}
               <ListItem.Content>
+                <View style={{flexDirection:'row',justifyContent:'space-between',width:'100%',}} >
+                <View >
                 <ListItem.Title>{l.batch_name}</ListItem.Title>
                 <ListItem.Subtitle>{l.batch_description}</ListItem.Subtitle>
-                <ListItem.Subtitle>{l.start_time}</ListItem.Subtitle>
-              </ListItem.Content>
-              <ListItem.Content>
-                {/* <ListItem.Title>
-                  <TouchableOpacity onPress={enrollNow} >
-                    <Text style={styles.buttonText}>JOIN BATCH</Text>
-                  </TouchableOpacity></ListItem.Title> */}
+                </View>
+                <View style={{marginRight:10}}>
+                <ListItem.Subtitle><Text>Start Time</Text> {l.start_time}</ListItem.Subtitle>
+                <ListItem.Subtitle><Text>End Time</Text>{l.end_time}</ListItem.Subtitle>
+                </View>
+                </View>
               </ListItem.Content>
             </ListItem>
           </TouchableOpacity>

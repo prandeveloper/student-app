@@ -45,7 +45,7 @@ export default function LogIn({navigation}) {
   const _storeData = async id => {
     console.log("kya aya ?????",users,id);
     try {
-      await AsyncStorage.multiSet([['user_type',users],['user_id', JSON.stringify(id)]]);
+      await AsyncStorage.multiSet([['user_type',users],['user_id', id]]);
       console.log('token saved success');
     } catch (error) {
       console.log('Some error in setting token');
@@ -59,6 +59,7 @@ export default function LogIn({navigation}) {
         console.log('success');
         console.log(user_id);
         setStoreddata(user_id);
+        // navigation.replace('Home');
       }
       if (user_type !== null) {
         console.log('success');

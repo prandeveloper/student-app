@@ -110,11 +110,11 @@ export default function ProfileEdit({ navigation }) {
         console.log('edit profile ///////', response.data.data);
         const user = response.data.data;
         {
-          setFullname(user[0].fullname);
+          setFullname(user[0].s_name);
           setEmail(user[0].email);
-          setMobile(JSON.stringify(user[0].mobile));
+          setMobile(user[0].phone);
           setPassword(user[0].password);
-          setConfirmPassword(user[0].cnfmPassword);
+          setConfirmPassword(user[0].cpassword);
           setAddress(user[0].address);
           setCity(user[0].city);
           setEducation(user[0].education);
@@ -176,6 +176,7 @@ export default function ProfileEdit({ navigation }) {
       selected,
       city,
       state,
+      experience
     );
     const data = new FormData();
     data.append('s_name', fullname);
@@ -188,7 +189,7 @@ export default function ProfileEdit({ navigation }) {
     data.append('state', state);
     data.append('experience', experience);
     data.append('education', education);
-    // data.append('Subject', selected);
+    data.append('Subject', JSON.stringify(selected));
     data.append('image', singleFile.assets[0].base64);
 
     fetch(
@@ -601,7 +602,7 @@ export default function ProfileEdit({ navigation }) {
                   iconStyle={styles.iconStyle}
                   data={showData}
                   labelField="subject_name"
-                  valueField="value"
+                  valueField="subject_name"
                   placeholder="Select Subject"
                   value={selected}
                   search

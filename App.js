@@ -347,9 +347,9 @@ const App = ({navigation}) => {
               height: 200,
             }}>
             <View style={{alignSelf: 'flex-start'}}>
-              {user?.userimg !== '' &&
-              user?.userimg !== null &&
-              user?.userimg !== undefined ? (
+              {user?.image !== '' &&
+              user?.image !== null &&
+              user?.image !== undefined ? (
                 <TouchableOpacity>
                   <Image
                     source={{uri: `${user?.image}`}}
