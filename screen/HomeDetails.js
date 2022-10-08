@@ -98,6 +98,11 @@ export default function HomeDetails({route, navigation}) {
       )
       .then(response => {
         console.log(response.data);
+        if (response.data !==null) {
+          ToastAndroid.show('SUCCESSFULL ADD FAVORITE ',2000)
+        } else {
+          Alert.alert("error.");
+        }
         // if (
         //   response.data.message == 'success' &&
         //   response.data.message === 'success'
@@ -107,11 +112,6 @@ export default function HomeDetails({route, navigation}) {
       })
       .catch(error => {
         console.log('####', error.response);
-        if (response.data !==null) {
-          ToastAndroid.show('Sucess full',2000)
-        } else {
-          Alert.alert("error.");
-        }
         // console.log(error.response.data.message);
         // if (
         //   error.response.data.message == 'already exists' &&
