@@ -53,6 +53,7 @@ import SearchDetails from './screen/SearchDetails';
 import ForgotPassword from './screen/ForgotPassword';
 import OtpScreen from './screen/OtpScreen';
 import ConfirnPassword from './screen/ConfirnPassword';
+import ModelScreen from './screen/model/ModelScreen';
 //import Profile from "./src/profile.png";
 
 const Tab = createBottomTabNavigator();
@@ -298,6 +299,11 @@ const TabNavigation = ({navigation}) => {
         component={ConfirnPassword}
         options={{headerShown: false}}
       />
+      <Stack.Screen
+        name="ModelScreen"
+        component={ModelScreen}
+        options={{headerShown: false}}
+      />
     </Stack.Navigator>
   );
 };
@@ -319,11 +325,13 @@ const App = ({navigation}) => {
   };
   const getUser = async () => {
     axios
-      .get(`https://edumatelive.in/studentadmin/newadmin/api/ApiCommonController/usernewdata/${storedata}`,)
+      .get(
+        `https://edumatelive.in/studentadmin/newadmin/api/ApiCommonController/usernewdata/${storedata}`,
+      )
       .then(response => {
         const user = response.data.data[0];
         setUser(user);
-        console.log("Profile #############",user);
+        console.log('Profile #############', user);
       })
       .catch(error => {
         console.log(error.response);

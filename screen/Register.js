@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -9,14 +9,14 @@ import {
   ToastAndroid,
 } from 'react-native';
 import axios from 'axios';
-import { ScrollView } from 'react-native-gesture-handler';
+import {ScrollView} from 'react-native-gesture-handler';
 import CheckBox from '@react-native-community/checkbox';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
+import {scale, verticalScale, moderateScale} from 'react-native-size-matters';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Picker } from '@react-native-picker/picker';
+import {Picker} from '@react-native-picker/picker';
 
-export default function Register({ navigation }) {
+export default function Register({navigation}) {
   const [passwordSecured, setPasswordSecured] = useState(true);
   const [toggleCheckBox, setToggleCheckBox] = useState(false);
   const [s_name, setS_name] = useState('');
@@ -27,20 +27,19 @@ export default function Register({ navigation }) {
   const [storeddata, setStoreddata] = useState('');
   const [storeUser_type, setStoreUser_type] = useState('');
   const [users, setUsers] = useState('');
+  const [clases, setClases] = useState('');
+  const [univercity, setUnivercity] = useState('');
+  const [data, setData] = useState([]);
 
-  const [language] = useState(
-    [
-      'Student',
-      'Teacher',
-      'Both',
-    ].sort()
-  );
-
+  const [language] = useState(['Student', 'Teacher', 'Both'].sort());
 
   const _storeData = async id => {
-    console.log("kya aya ?????",users,id);
+    console.log('kya aya ?????', users, id);
     try {
-      await AsyncStorage.multiSet([['user_type',users],['user_id', JSON.stringify(id)]]);
+      await AsyncStorage.multiSet([
+        ['user_type', users],
+        ['user_id', JSON.stringify(id)],
+      ]);
       console.log('token saved success');
     } catch (error) {
       console.log('Some error in setting token');
@@ -67,13 +66,15 @@ export default function Register({ navigation }) {
   };
   useEffect(() => {
     getData();
-  }, [storeddata,storeUser_type]);
+  }, [storeddata, storeUser_type]);
   const signUp = (
     s_name,
     email,
     phone,
     password,
     cpassword,
+    clases,
+    univercity,
     users,
   ) => {
     console.log(
@@ -83,19 +84,29 @@ export default function Register({ navigation }) {
       password,
       cpassword,
       users,
+      clases,
+      univercity,
     );
     axios
-      .post(`https://edumatelive.in/studentadmin/newadmin//api/ApiCommonController/userRegister`, {
-        s_name: s_name,
-        email: email,
-        phone: phone,
-        password: password,
-        cpassword: cpassword,
-        users: users,
-      })
+      .post(
+        `https://edumatelive.in/studentadmin/newadmin//api/ApiCommonController/userRegister`,
+        {
+          s_name: s_name,
+          email: email,
+          phone: phone,
+          password: password,
+          cpassword: cpassword,
+          classs: clases,
+          university: univercity,
+          users: users,
+        },
+      )
       .then(function (response) {
         console.log('///////////', response.data.data.users);
-        if (response.data.message === 'success' || response.data.message == 'success') {
+        if (
+          response.data.message === 'success' ||
+          response.data.message == 'success'
+        ) {
           ToastAndroid.show('Register Successfull....', ToastAndroid.SHORT);
         }
         console.log(response.data.data);
@@ -111,6 +122,23 @@ export default function Register({ navigation }) {
         console.log(error).response;
       });
   };
+  const getClass = async () => {
+    axios
+      .get(
+        `https://edumatelive.in/studentadmin/newadmin/api/ApiCommonController/classsbyid`,
+      )
+      .then(response => {
+        console.log('<<<<<class', response.data.data);
+        const res = response.data.data;
+        setData(res);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  };
+  useEffect(() => {
+    getClass();
+  }, []);
   return (
     <ScrollView style={styles.container}>
       <View
@@ -120,7 +148,7 @@ export default function Register({ navigation }) {
           alignSelf: 'center',
           height: verticalScale(80),
         }}>
-        <Text style={{ fontSize: 30, fontWeight: 'bold', color: 'black' }}>
+        <Text style={{fontSize: 30, fontWeight: 'bold', color: 'black'}}>
           Create an account
         </Text>
       </View>
@@ -128,7 +156,7 @@ export default function Register({ navigation }) {
         <View style={styles.inputView}>
           <Icon name="user" size={20} color="black" />
           <TextInput
-            style={{ paddingHorizontal: 12, flex: 1 }}
+            style={{paddingHorizontal: 12, flex: 1}}
             placeholder="Full Name"
             textContentType="name"
             onChangeText={setS_name}
@@ -140,7 +168,7 @@ export default function Register({ navigation }) {
         <View style={styles.inputView}>
           <Icon name="envelope" size={20} color="black" />
           <TextInput
-            style={{ paddingHorizontal: 12, flex: 1 }}
+            style={{paddingHorizontal: 12, flex: 1}}
             placeholder="Email"
             textContentType="emailAddress"
             onChangeText={setEmail}
@@ -153,7 +181,7 @@ export default function Register({ navigation }) {
           <Icon name="phone" size={20} color="black" />
           <TextInput
             keyboardType="numeric"
-            style={{ paddingHorizontal: 12, flex: 1 }}
+            style={{paddingHorizontal: 12, flex: 1}}
             placeholder="phone No."
             textContentType="telephoneNumber"
             onChangeText={setPhone}
@@ -165,7 +193,7 @@ export default function Register({ navigation }) {
         <View style={styles.inputView}>
           <Icon name="lock" size={20} color="black" />
           <TextInput
-            style={{ flex: 1, paddingHorizontal: 12 }}
+            style={{flex: 1, paddingHorizontal: 12}}
             placeholder={'password'}
             secureTextEntry={passwordSecured}
             textContentType="password"
@@ -175,7 +203,7 @@ export default function Register({ navigation }) {
             color="black"
           />
           <TouchableOpacity
-            style={{ padding: 4 }}
+            style={{padding: 4}}
             onPress={() => {
               setPasswordSecured(!passwordSecured);
             }}>
@@ -185,7 +213,7 @@ export default function Register({ navigation }) {
         <View style={styles.inputView}>
           <Icon name="lock" size={20} color="black" />
           <TextInput
-            style={{ flex: 1, paddingHorizontal: 12 }}
+            style={{flex: 1, paddingHorizontal: 12}}
             placeholder={'confirm password'}
             secureTextEntry={passwordSecured}
             textContentType="password"
@@ -195,7 +223,7 @@ export default function Register({ navigation }) {
             color="black"
           />
           <TouchableOpacity
-            style={{ padding: 4 }}
+            style={{padding: 4}}
             onPress={() => {
               setPasswordSecured(!passwordSecured);
             }}>
@@ -203,30 +231,44 @@ export default function Register({ navigation }) {
           </TouchableOpacity>
         </View>
         <View style={styles.dropDown}>
+          {/* <Icon name="mortar-board" size={20} color="black" /> */}
+          <Picker
+            selectedValue={clases}
+            onValueChange={itemVal => {
+              setClases(itemVal);
+            }}>
+            {data.map(l => (
+              <Picker.Item
+                label={l.class}
+                value={l.id}
+                style={{color: 'black'}}
+              />
+            ))}
+          </Picker>
+        </View>
+        <View style={styles.inputView}>
+          <Icon name="university" size={20} color="black" />
+          <TextInput
+            style={{paddingHorizontal: 12, flex: 1}}
+            placeholder="University"
+            textContentType="emailAddress"
+            onChangeText={setUnivercity}
+            value={univercity}
+            placeholderTextColor="#003f5c"
+            color="black"
+          />
+        </View>
+        <View style={styles.dropDown}>
           {/* <Icon name="money" size={20} color="black" /> */}
           <Picker
             selectedValue={users}
-            onValueChange={(itemVal) => {
+            onValueChange={itemVal => {
               setUsers(itemVal);
-            }}
-          >
-            {
-              language.map((l) => (
-                <Picker.Item label={l} value={l} style={{ color: 'black' }} />
-              ))
-            }
-
+            }}>
+            {language.map(l => (
+              <Picker.Item label={l} value={l} style={{color: 'black'}} />
+            ))}
           </Picker>
-          {/* <TextInput
-            keyboardType="numeric"
-            style={{paddingHorizontal: 12, flex: 1}}
-            placeholder="Referral Code (optional)"
-            textContentType="telephoneNumber"
-            onChangeText={setReferral_code}
-            value={referral_code}
-            placeholderTextColor="#003f5c"
-            color="black"
-          /> */}
         </View>
 
         <View
@@ -243,24 +285,31 @@ export default function Register({ navigation }) {
               disabled={false}
               value={toggleCheckBox}
               onValueChange={newValue => setToggleCheckBox(newValue)}
-              tintColors={{ true: '#F15927', false: 'black' }}
+              tintColors={{true: '#F15927', false: 'black'}}
             />
           </View>
           <View
-            style={{ justifyContent: 'center', alignSelf: 'center', width: 250 }}>
-            <Text style={{ color: '#7A7A81' }}>
+            style={{justifyContent: 'center', alignSelf: 'center', width: 250}}>
+            <Text style={{color: '#7A7A81'}}>
               By Using our services you are agreeing to our
-              <Text style={{ color: 'black', fontWeight: 'bold' }}>
+              <Text style={{color: 'black', fontWeight: 'bold'}}>
                 Terms
               </Text>{' '}
               and{' '}
-              <Text style={{ color: 'black', fontWeight: 'bold' }}>
+              <Text style={{color: 'black', fontWeight: 'bold'}}>
                 Privacy Statement
               </Text>{' '}
             </Text>
           </View>
         </View>
-        {s_name && email && phone && password && cpassword && users ? (
+        {s_name &&
+        email &&
+        phone &&
+        password &&
+        cpassword &&
+        clases &&
+        univercity &&
+        users ? (
           <TouchableOpacity
             style={styles.logbut}
             onPress={() => {
@@ -270,16 +319,18 @@ export default function Register({ navigation }) {
                 phone,
                 password,
                 cpassword,
+                clases,
+                univercity,
                 users,
               );
             }}>
-            <Text style={{ fontSize: 20, fontWeight: 'bold', color: 'white' }}>
+            <Text style={{fontSize: 20, fontWeight: 'bold', color: 'white'}}>
               Create account
             </Text>
           </TouchableOpacity>
         ) : (
           <TouchableOpacity style={styles.logbut}>
-            <Text style={{ fontSize: 16, fontWeight: 'bold', color: 'white' }}>
+            <Text style={{fontSize: 16, fontWeight: 'bold', color: 'white'}}>
               Please Enter Details
             </Text>
           </TouchableOpacity>
@@ -292,11 +343,11 @@ export default function Register({ navigation }) {
               alignSelf: 'center',
               marginTop: moderateScale(30),
             }}
-            onPress={() => navigation.navigate('Login', { name: 'Login' })}>
-            <Text style={{ margin: 8, color: 'black' }}>
+            onPress={() => navigation.navigate('Login', {name: 'Login'})}>
+            <Text style={{margin: 8, color: 'black'}}>
               Already Have An Account?
             </Text>
-            <Text style={{ color: 'red', fontWeight: 'bold', fontSize: 15 }}>
+            <Text style={{color: 'red', fontWeight: 'bold', fontSize: 15}}>
               Sign In
             </Text>
           </TouchableOpacity>
@@ -305,7 +356,7 @@ export default function Register({ navigation }) {
     </ScrollView>
   );
 }
-const Login = ({ navigation, route }) => {
+const Login = ({navigation, route}) => {
   return;
 };
 
